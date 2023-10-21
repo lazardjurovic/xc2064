@@ -9,23 +9,17 @@ using namespace sc_core;
 
 int sc_main(int argc, char *argv[]){
 
-/*
-    sc_signal<bool> clk;
-    sc_signal<bool> s, d, k, r;
-    sc_signal<bool> q;
-    
-    flip_flop dff("DFF");
-    dff.clk(clk);
-    dff.s(s);
-    dff.d(d);
-    dff.r(r);
-    dff.q(q);
+    sc_signal<bool> a,b,c,d,clk,x,y;
 
-    clk_gen gen("GEN");
-    gen.clk(clk);
+    clb cll("clb1");
 
-*/
-
+    cll.a(a);
+    cll.b(b);
+    cll.c(c);
+    cll.d(d);
+    cll.clk(clk);
+    cll.x(x);
+    cll.y(y);
 
     sc_start(10, SC_US);
 

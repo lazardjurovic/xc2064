@@ -14,8 +14,8 @@ SC_MODULE(comb_logic){
     SC_CTOR(comb_logic){
         SC_THREAD(proc_comb);
 
-        lut3on1 upper("upper lut");
-        lut3on1 lower("lowe lut");
+        lut3on1 upper("upper_lut");
+        lut3on1 lower("lowe_lut");
 
         //routing inputs to lut3on1s
         upper.a(mux1_out);

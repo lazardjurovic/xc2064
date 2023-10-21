@@ -5,19 +5,21 @@
 #include "flip_flop.hpp"
 
 using namespace sc_core;
+using namespace std;
 
 SC_MODULE(clb){
 
 //entity ports
 
     sc_in<bool> a, b, c, d, clk;
-    sc_out<bool> x, y;
+    sc_out<bool> x;
+    sc_out<bool> y;
 
     SC_CTOR(clb){
         SC_THREAD(proc_clb);
 
-        comb_logic comb("comb logic");
-        flip_flop dff("flip flop");
+        comb_logic comb("comb_logic");
+        flip_flop dff("flip_flop");
 
         // routing ports
         comb.a(a);
@@ -25,6 +27,8 @@ SC_MODULE(clb){
         comb.c(c);
         comb.d(d);
         comb.q(q);
+        comb.f(f);
+        comb.g(g);
 
         dff.clk(k);
         dff.r(r);
@@ -71,7 +75,7 @@ SC_MODULE(clb){
             }else if(mux_sels[6] == 1 && mux_sels[7] == 0){
                 y = g;
             }else if(mux_sels[6] == 0 && mux_sels[7] == 1){
-                x = f;
+                y = f;
             }
             
         }
