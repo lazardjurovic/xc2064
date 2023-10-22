@@ -82,6 +82,10 @@ SC_MODULE(clb){
 
     }
 
+    void setup_clb(bool val[144]){
+        
+    }
+
 private:
     sc_signal<bool> f, g;
     sc_signal<bool> q, k, r, s;
