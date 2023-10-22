@@ -1,5 +1,7 @@
 import re
 
+#Format existing .RBT file
+
 filename = "TEST1.RBT"
 with open(filename, 'r') as file:
     lines = file.read()
@@ -16,15 +18,18 @@ for i in range(160):
     else:
         columns.append("0" * 71) 
 
-with open("OUT.RBT",'w') as out:
-    for col in columns:
-        out.write(col)
-        out.write("\n")
-
 merged_binary_array = ''.join(columns)
 
 print("Unwrapped bitstream file.")
 print(merged_binary_array)
 
+#JUST DO OPERATIONS ON PRE-GENERATED BITSTREAM
+
+filename = "SITE_DEMO.RBT"
+
+with open(filename,'r') as f:
+    line = f.read();
+
+print(line[643:651])
 
 
