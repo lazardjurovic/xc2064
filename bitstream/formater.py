@@ -20,8 +20,8 @@ for i in range(160):
 
 merged_binary_array = ''.join(columns)
 
-print("Unwrapped bitstream file.")
-print(merged_binary_array)
+#print("Unwrapped bitstream file.")
+#print(merged_binary_array)
 
 #JUST DO OPERATIONS ON PRE-GENERATED BITSTREAM
 
@@ -30,6 +30,11 @@ filename = "SITE_DEMO.RBT"
 with open(filename,'r') as f:
     line = f.read();
 
-print(line[643:651])
+cell = []
 
-
+for i in range(643,1921,71):
+    for j in range(0,8):
+        print(i+j,line[i+j])
+        cell.append(line[i+j])
+        
+print(cell)
