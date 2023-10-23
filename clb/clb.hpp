@@ -18,11 +18,8 @@ SC_MODULE(clb){
     sc_out<bool> x;
     sc_out<bool> y;
 
-    SC_CTOR(clb){
+    SC_CTOR(clb) : comb("comb_logic"), dff("flip_flop"){
         SC_THREAD(proc_clb);
-
-        comb_logic comb("comb_logic");
-        flip_flop dff("flip_flop");
 
         // routing ports
         comb.a(a);
@@ -110,8 +107,6 @@ SC_MODULE(clb){
 
 
 
-
-
     }
 
 private:
@@ -135,6 +130,8 @@ private:
     sc_signal<bool> f, g;
     sc_signal<bool> q, k, r, s;
     bool mux_sels[8];
-    bool setup[144];
+
+    comb_logic comb;
+    flip_flop dff;
 
 };

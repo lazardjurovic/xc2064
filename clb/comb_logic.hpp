@@ -11,11 +11,8 @@ SC_MODULE(comb_logic){
     sc_in<bool> a, b, c, d, q;
     sc_out<bool> f, g;
 
-    SC_CTOR(comb_logic){
+    SC_CTOR(comb_logic) : upper("upper_lut") , lower("lower_lut"){
         SC_THREAD(proc_comb);
-
-        lut3on1 upper("upper_lut");
-        lut3on1 lower("lower_lut");
 
         //routing inputs to lut3on1s
         upper.a(mux1_out);
@@ -86,9 +83,11 @@ SC_MODULE(comb_logic){
 
     }
 
-    void setup_comb_logic();
+    void 
+
 
 private:
+    lut3on1 upper,lower;
     bool mux_sels[8];
     sc_signal<bool> mux1_out, mux2_out, mux3_out, mux4_out, mux5_out, mux6_out;
     int addr1, addr2;
