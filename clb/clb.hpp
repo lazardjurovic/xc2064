@@ -1,5 +1,8 @@
 #include <systemc>
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
 
 #include "comb_logic.hpp"
 #include "flip_flop.hpp"
@@ -82,13 +85,56 @@ SC_MODULE(clb){
 
     }
 
-    void setup_clb(bool val[144]){
+    void load_clb_matrix(string name,int index){
+
+        ifstream file(name);
+        string line;
+
+        if(file.is_open()){
         
+            int line_cnt = 0;
+
+            while(getline(file,line)){
+                if(line_cnt == index){
+                    break;
+                }
+                line_cnt++;
+            }
+
+            file.close();
+        }else{
+            cout << "Unable to open file " << name << endl; 
+        }
+
+        vector<bool> bin_line = string_to_bin_vector(line);
+
+
+
+
+
     }
 
 private:
+
+    vector<bool> string_to_bin_vector(string line){
+
+        vector<bool> res;
+
+        for(char &c: line){
+            if(c=='0'){
+                res.push_back(0);
+            }else{
+                res.push_back(1);
+            }
+        }
+
+        return res;
+
+    }
+
     sc_signal<bool> f, g;
     sc_signal<bool> q, k, r, s;
     bool mux_sels[8];
+    bool setup[144];
 
 };
