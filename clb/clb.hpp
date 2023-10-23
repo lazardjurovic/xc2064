@@ -116,6 +116,12 @@ SC_MODULE(clb){
         comb.setup_upper_lut(upper_setup_vector);
         comb.setup_lower_lut(lower_setup_vector);
 
+        //control signals for muxes that selct LUT inputs
+        bool comb_sels_vector[8] = {bin_line[81], bin_line[89], bin_line[129], bin_line[137], // selecting inputs for F LUT
+        bin_line[49], bin_line[57], bin_line[9], bin_line[1] }; // selecting inputs for G LUT
+
+        comb.setup_selects(comb_sels_vector);
+
     }
 
 private:

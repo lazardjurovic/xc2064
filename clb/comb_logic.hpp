@@ -46,13 +46,13 @@ SC_MODULE(comb_logic){
                 mux2_out = c;
             }
 
-            if(mux_sels[2] == 0 && mux_sels[3] == 0){
+            if(mux_sels[2] == 1){
                 mux3_out = c;
 
-            }else if(mux_sels[2] == 0 && mux_sels[3] == 1){
+            }else if(mux_sels[3] == 1){
                 mux3_out = d;
 
-            }else if(mux_sels[2] == 1 && mux_sels[3] == 0){
+            }else{
                 mux1_out = q;
             }
 
@@ -69,13 +69,13 @@ SC_MODULE(comb_logic){
                 mux2_out = c;
             }
 
-            if(mux_sels[6] == 0 && mux_sels[7] == 0){
+            if(mux_sels[6] == 1){
                 mux3_out = c;
 
-            }else if(mux_sels[6] == 0 && mux_sels[7] == 1){
+            }else if(mux_sels[7] == 1){
                 mux3_out = d;
 
-            }else if(mux_sels[6] == 1 && mux_sels[7] == 0){
+            }else{
                 mux1_out = q;
             }
 
@@ -91,6 +91,12 @@ SC_MODULE(comb_logic){
     void setup_lower_lut(bool v[8]){
         lower.setup_lut(v);
         lower.print_lut();
+    }
+
+    void setup_selects(bool s[8]){
+        for(int i=0;i<7;i++){
+            mux_sels[i] = s[i];
+        }
     }
 
 
