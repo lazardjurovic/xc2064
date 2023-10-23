@@ -83,7 +83,15 @@ SC_MODULE(comb_logic){
 
     }
 
-    void 
+    void setup_upper_lut(bool v[8]){
+        upper.setup_lut(v);
+        upper.print_lut();
+    }
+
+    void setup_lower_lut(bool v[8]){
+        lower.setup_lut(v);
+        lower.print_lut();
+    }
 
 
 private:

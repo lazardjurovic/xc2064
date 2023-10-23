@@ -105,7 +105,16 @@ SC_MODULE(clb){
 
         vector<bool> bin_line = string_to_bin_vector(line);
 
+        // signal F in datasheet
+        bool upper_setup_vector[8] = {bin_line[128],bin_line[96],bin_line[120],bin_line[88],bin_line[136],
+        bin_line[104],bin_line[112],bin_line[80]};
 
+        //signal G in datasheet
+        bool lower_setup_vector[8] = {bin_line[8],bin_line[40],bin_line[16],bin_line[48],bin_line[0],
+        bin_line[32],bin_line[24],bin_line[56]};
+        
+        comb.setup_upper_lut(upper_setup_vector);
+        comb.setup_lower_lut(lower_setup_vector);
 
     }
 

@@ -21,6 +21,8 @@ int sc_main(int argc, char *argv[]){
     cll.x(x);
     cll.y(y);
 
+    cll.load_clb_matrix("bitstream/Parse_out.txt",1);
+
     sc_start(10, SC_US);
 
     return 0;
