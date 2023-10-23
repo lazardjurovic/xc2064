@@ -94,9 +94,17 @@ SC_MODULE(comb_logic){
     }
 
     void setup_selects(bool s[8]){
-        for(int i=0;i<7;i++){
+        for(int i=0;i<8;i++){
             mux_sels[i] = s[i];
         }
+    }
+
+    void print_controls(){
+        cout << "Mux select bits: " <<endl;
+        for(int i=0;i<8; i++){
+            cout << mux_sels[i] << endl;
+        }
+        cout << endl;
     }
 
 

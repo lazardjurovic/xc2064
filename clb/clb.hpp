@@ -103,6 +103,9 @@ SC_MODULE(clb){
             cout << "Unable to open file " << name << endl; 
         }
 
+        cout << "Loading CLB with: "<<endl;
+        cout << line <<endl;
+
         vector<bool> bin_line = string_to_bin_vector(line);
 
         // signal F in datasheet
@@ -121,6 +124,8 @@ SC_MODULE(clb){
         bin_line[49], bin_line[57], bin_line[9], bin_line[1] }; // selecting inputs for G LUT
 
         comb.setup_selects(comb_sels_vector);
+
+        comb.print_controls();
 
     }
 

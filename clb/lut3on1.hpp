@@ -33,13 +33,14 @@ SC_MODULE(lut3on1){
     }
 
     void setup_lut(bool v[8]){
-        for(int i =0 ;i< 7; i++){
+        for(int i =0 ;i< 8; i++){
             vals[i] = v[i];
         }
     }
 
     void print_lut(){
-        for(int i=0; i<7; i++){
+        cout << "LUT " << name() << endl;
+        for(int i=0; i<8; i++){
             cout << i << ": " << vals[i] << endl;
         }
     }
