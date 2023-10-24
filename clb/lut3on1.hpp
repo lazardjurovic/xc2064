@@ -11,7 +11,7 @@ SC_MODULE(lut3on1){
     sc_in<bool> a, b, c;
     sc_out<bool> out;
 
-    SC_CTOR(lut3on1){
+    SC_CTOR(lut3on1) : out(0){
 
         for(bool &b : vals){
             b = 0;
@@ -23,7 +23,7 @@ SC_MODULE(lut3on1){
     void proc_lut(){
 
         while(true){
-
+            wait();
             int addr = 8*a + 4*b + c;
 
             out = vals[addr];
@@ -39,10 +39,12 @@ SC_MODULE(lut3on1){
     }
 
     void print_lut(){
+        
         cout << "LUT " << name() << endl;
         for(int i=0; i<8; i++){
             cout << i << ": " << vals[i] << endl;
         }
+        
     }
 
 

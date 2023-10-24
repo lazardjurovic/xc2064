@@ -11,7 +11,7 @@ SC_MODULE(comb_logic){
     sc_in<bool> a, b, c, d, q;
     sc_out<bool> f, g;
 
-    SC_CTOR(comb_logic) : upper("upper_lut") , lower("lower_lut"){
+    SC_CTOR(comb_logic) : f(0),g(0),upper("upper_lut") , lower("lower_lut"){
         SC_THREAD(proc_comb);
 
         //routing inputs to lut3on1s
@@ -32,7 +32,7 @@ SC_MODULE(comb_logic){
     void proc_comb(){
 
         while(true){
-
+            wait();
             //upper lut muxes
             if(mux_sels[0] == 1){
                 mux1_out = a;
@@ -100,11 +100,13 @@ SC_MODULE(comb_logic){
     }
 
     void print_controls(){
+        
         cout << "Mux select bits: " <<endl;
         for(int i=0;i<8; i++){
             cout << mux_sels[i] << endl;
         }
         cout << endl;
+        
     }
 
 

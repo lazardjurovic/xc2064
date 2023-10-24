@@ -18,7 +18,7 @@ SC_MODULE(clb){
     sc_out<bool> x;
     sc_out<bool> y;
 
-    SC_CTOR(clb) : comb("comb_logic"), dff("flip_flop"){
+    SC_CTOR(clb) : x(0),y(0),comb("comb_logic"), dff("flip_flop"){
         SC_THREAD(proc_clb);
 
         // routing ports
@@ -41,7 +41,7 @@ SC_MODULE(clb){
     void proc_clb(){
 
         while(true){
-            
+            wait();
             //page 7 of Datasheet for xc2000 family has detailed table for 
             //setting up logic aroung flip flops
 
@@ -64,11 +64,19 @@ SC_MODULE(clb){
             }
 
             if(clb_mux_controls[5] == 1){
-                x = f;
+                x.write(f);
             }else if(clb_mux_controls[6] == 1){
-                x = g;
+                x.write(g);
             }else{
-                x = q;
+                x.write(q);
+            }
+
+            if(clb_mux_controls[7]== 1){
+                y.write(g);
+            }else if(clb_mux_controls[8] == 1){
+                y.write(f);
+            }else{
+                y.write(q);
             }
 
 
@@ -96,7 +104,6 @@ SC_MODULE(clb){
             }
 
         }
-
 
 
     }
@@ -189,8 +196,8 @@ private:
 
     }
 
-    sc_signal<bool> f, g;
-    sc_signal<bool> q, k, reset, set;
+    sc_signal<bool> f,g;
+    sc_signal<bool> q,k,reset,set;
     sc_signal<bool> wanted_clk;
     sc_signal<bool> clk_mux_out;
     bool clb_mux_controls[12];

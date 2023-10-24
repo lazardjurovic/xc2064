@@ -1,8 +1,9 @@
 #include <systemc>
+#include <iostream>
 
 using namespace sc_core;
 
-#define CLK_PERIOD 100
+#define CLK_PERIOD 200
 
 SC_MODULE(clk_gen){
 

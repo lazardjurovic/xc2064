@@ -6,24 +6,29 @@
 
 using namespace std;
 using namespace sc_core;
+using namespace sc_dt;
 
 int sc_main(int argc, char *argv[]){
 
-    sc_signal<bool> a,b,c,d,clk,x,y;
+    sc_signal<bool> a,b,c,d,clk_signal,x,y;
 
-    clb cll("clb1");
+    clb test_clb("clb");
+    clk_gen clock("clock");
 
-    cll.a(a);
-    cll.b(b);
-    cll.c(c);
-    cll.d(d);
-    cll.clk(clk);
-    cll.x(x);
-    cll.y(y);
+    clock.clk(clk_signal);
 
-    cll.load_clb_matrix("bitstream/Parse_out.txt",0);
+    test_clb.a(a);
+    test_clb.b(b);
+    test_clb.c(c);
+    test_clb.d(d);
+    test_clb.clk(clk_signal);
+    test_clb.x(x);
+    test_clb.y(y);
+    test_clb.load_clb_matrix("bitstream/Parse_out.txt",0);
 
-    sc_start(10, SC_US);
+    sc_start(1, SC_US);
+
+    cout << x << y<<endl;
 
     return 0;
 
