@@ -30,10 +30,10 @@ SC_MODULE(clb){
         comb.f(f);
         comb.g(g);
 
-        dff.clk(k);
-        dff.r(r);
+        dff.clk(wanted_clk);
+        dff.r(reset);
         dff.d(f);
-        dff.s(s);
+        dff.s(set);
         dff.q(q);
 
     }
@@ -41,44 +41,63 @@ SC_MODULE(clb){
     void proc_clb(){
 
         while(true){
+            
+            //page 7 of Datasheet for xc2000 family has detailed table for 
+            //setting up logic aroung flip flops
 
-            if(mux_sels[0]== 1){
-                s  = a;
-            }else {
-                s = f;
-            }
+            //creating 3 input muxes
 
-            if(mux_sels[1] == 0 && mux_sels[2] == 0){
-                k = g;
-            }else if(mux_sels[1] == 0 && mux_sels[2] == 1){
-                k = c;
-            }else if(mux_sels[1] == 1 && mux_sels[2] == 0){
-                k = clk;
-            }
-
-            if(mux_sels[3] == 1){
-                r = d;
+            if(clb_mux_controls[0] == 1){
+                reset = g;
+            }else if(clb_mux_controls[1]== 1){
+                reset = d | g;
             }else{
-                r = g;
+                reset = 0;
             }
 
-            if(mux_sels[4] == 0 && mux_sels[5] == 0){
+            if(clb_mux_controls[2] == 1){
+                set = 0;
+            }else if(clb_mux_controls[3] == 1){
+                set = f;
+            }else{
+                set = a;
+            }
+
+            if(clb_mux_controls[5] == 1){
                 x = f;
-            }else if(mux_sels[4] == 1 && mux_sels[5] == 0){
+            }else if(clb_mux_controls[6] == 1){
                 x = g;
-            }else if(mux_sels[4] == 0 && mux_sels[5] == 1){
+            }else{
                 x = q;
             }
 
-            if(mux_sels[6] == 0 && mux_sels[7] == 0){
-                y = q;
-            }else if(mux_sels[6] == 1 && mux_sels[7] == 0){
-                y = g;
-            }else if(mux_sels[6] == 0 && mux_sels[7] == 1){
-                y = f;
+
+            //DOUBT THIS LOGIC WORKS
+            //TODO: CHECK DATASHEET INTENSIVLY. TEST
+
+            if(clb_mux_controls[9] == 1){
+                clk_mux_out = c;
+            }else{
+                if(clb_mux_controls[11] == 0){
+                    clk_mux_out = clk;
+                }else{
+                    clk_mux_out = g;
+                }
             }
-            
+
+            if(clb_mux_controls[4] == 1){ // latch
+                wanted_clk = 0;
+            }else{
+                if(clb_mux_controls[10] == 0){
+                    wanted_clk = clk_mux_out;
+                }else{
+                    wanted_clk = !clk_mux_out;
+                }
+            }
+
         }
+
+
 
     }
 
@@ -127,9 +146,32 @@ SC_MODULE(clb){
 
         comb.print_controls();
 
+        //setting up controls for muxes in CLB module
+        bool mux_tmp[12] = {bin_line[138], // RES = G
+                    bin_line[130], // RES = D OR G
+                    bin_line[122], // SET = none
+                    bin_line[114], // SET = F
+                    bin_line[66], // Q = LATCH
+                    bin_line[58], // X = F
+                    bin_line[50], // X = G
+                    bin_line[42], // Y = G
+                    bin_line[34], // Y = F
+                    bin_line[107], // CLK = C
+                    bin_line[99], //CLK = inverted(FF), noninverted(LATCH)
+                    bin_line[91] //CLK = enabled
+        };  
+
+        setup_mux_controls(mux_tmp);
+
     }
 
 private:
+
+    void setup_mux_controls(bool a[9]){
+        for(int i = 0; i<12;i++){
+            clb_mux_controls[i] = a[i];
+        }
+    }
 
     vector<bool> string_to_bin_vector(string line){
 
@@ -148,8 +190,10 @@ private:
     }
 
     sc_signal<bool> f, g;
-    sc_signal<bool> q, k, r, s;
-    bool mux_sels[8];
+    sc_signal<bool> q, k, reset, set;
+    sc_signal<bool> wanted_clk;
+    sc_signal<bool> clk_mux_out;
+    bool clb_mux_controls[12];
 
     comb_logic comb;
     flip_flop dff;
