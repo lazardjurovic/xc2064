@@ -71,7 +71,7 @@ SC_MODULE(clb_one){
                     }
                     
                     big_lut_address = 8*a + 4*b + 2*c + dq_mux;
-                    cout << "accessing lut at address: "<< big_lut_address<<endl;
+                    //cout << "accessing lut at address: "<< big_lut_address<<endl;
 
 
                     lut_f = big_lut[big_lut_address];
@@ -80,6 +80,25 @@ SC_MODULE(clb_one){
                 }else{
                     lut_f = upper_lut[upper_lut_address];
                     lut_g = lower_lut[lower_lut_address];
+                }
+
+
+                //connecting x and y outputs
+
+                if(clb_muxes[5] == 1){
+                    x = lut_f;
+                }else if(clb_muxes[6] ==1){
+                    x = lut_g;
+                }else{
+                    x = ff_q;
+                }
+
+                if(clb_muxes[7] == 1){
+                    y = lut_g;
+                }else if(clb_muxes[8] == 1){
+                    y = lut_f;
+                }else{
+                    y = ff_q;
                 }
 
                 cout << lut_f << lut_g<<endl;

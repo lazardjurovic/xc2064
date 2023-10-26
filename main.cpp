@@ -40,22 +40,23 @@ int sc_main(int argc, char *argv[]){
 
     d = 1;
     sc_start(10, SC_US);
-    //cout << x.read() << y.read()<<endl;
+    cout << x.read() << y.read()<<endl;
 
     c = 1;
     sc_start(10,SC_US);
-    //cout << x.read() << y.read()<<endl;
+    cout << x.read() << y.read()<<endl;
 
     b = 1;
     sc_start(10,SC_US);
-    //cout << x.read() << y.read()<<endl;
+    cout << x.read() << y.read()<<endl;
 
     a = 1;
     sc_start(10,SC_US);
-    //cout << x.read() << y.read()<<endl;
+    cout << x.read() << y.read()<<endl;
 
     a = 0;
     sc_start(10,SC_US);
+    
 
 
     return 0;
