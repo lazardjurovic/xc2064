@@ -25,8 +25,7 @@ SC_MODULE(lut3on1){
 
         while(true){
             wait();
-            int addr = 8*a + 4*b + c;
-
+            int addr = 4*a + 2*b + c;
             out = vals[addr];
 
         }

@@ -31,9 +31,13 @@ int sc_main(int argc, char *argv[]){
     test_clb.y(y);
     test_clb.load_clb_matrix("bitstream/Parse_out.txt",0);
 
-    sc_start(1, SC_US);
-    
-    cout << x << y<<endl;
+    sc_start(10, SC_US);
+    a = 1;
+    sc_start(10,SC_US);
+    b = 1;
+    sc_start(10,SC_US);
+
+    cout << x.read() << y.read()<<endl;
 
     return 0;
 
