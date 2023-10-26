@@ -19,7 +19,6 @@ SC_MODULE(flip_flop){
             wait();
 
             if(clk.posedge()){
-                
                 if(s.read() == 1){
                     prev_d = 1;
                 }else if(r.read() == 1){

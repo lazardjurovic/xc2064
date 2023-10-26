@@ -43,7 +43,6 @@ SC_MODULE(clb){
 
         while(true){
             wait();
-            cout << "CLB_PROC"<<endl;
             //page 7 of Datasheet for xc2000 family has detailed table for 
             //setting up logic aroung flip flops
 
