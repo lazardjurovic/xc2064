@@ -27,6 +27,9 @@ SC_MODULE(lut3on1){
             wait();
             int addr = 4*a + 2*b + c;
             out = vals[addr];
+            
+            cout << "LUT input: " << a << b << c<<endl;
+            cout << "OUT FROM LUT: " << out <<endl;
 
         }
 

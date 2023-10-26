@@ -80,6 +80,9 @@ SC_MODULE(comb_logic){
                 mux1_out = q;
             }
 
+            cout << "Muxes: "<<mux1_out << mux2_out << mux3_out << mux4_out << mux5_out << mux6_out << endl;
+            cout << "LUT outs: " << f << g<<endl; 
+
         }
 
     }
