@@ -20,6 +20,7 @@ SC_MODULE(clb){
 
     SC_CTOR(clb) : x(0),y(0),comb("comb_logic"), dff("flip_flop"){
         SC_THREAD(proc_clb);
+        sensitive << a<<b<<c<<d<<clk;
 
         // routing ports
         comb.a(a);
@@ -42,6 +43,7 @@ SC_MODULE(clb){
 
         while(true){
             wait();
+            cout << "CLB_PROC"<<endl;
             //page 7 of Datasheet for xc2000 family has detailed table for 
             //setting up logic aroung flip flops
 

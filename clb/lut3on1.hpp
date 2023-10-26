@@ -18,6 +18,7 @@ SC_MODULE(lut3on1){
         }
 
         SC_THREAD(proc_lut);
+        sensitive << a<<b<<c;
     }
 
     void proc_lut(){

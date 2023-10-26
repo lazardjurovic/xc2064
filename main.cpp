@@ -17,6 +17,11 @@ int sc_main(int argc, char *argv[]){
 
     clock.clk(clk_signal);
 
+    a = 0;
+    b = 0;
+    c = 0;
+    d = 0;
+
     test_clb.a(a);
     test_clb.b(b);
     test_clb.c(c);
@@ -27,7 +32,7 @@ int sc_main(int argc, char *argv[]){
     test_clb.load_clb_matrix("bitstream/Parse_out.txt",0);
 
     sc_start(1, SC_US);
-
+    
     cout << x << y<<endl;
 
     return 0;
