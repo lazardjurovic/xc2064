@@ -22,14 +22,16 @@ SC_MODULE(clb_one){
         for(bool &element : big_lut)
             element = 0;
 
-        big_lut_address = 1; // TESTING
-        
+        big_lut_address = 0;
+        upper_lut_address = 0;
+        lower_lut_address = 0;
 
         SC_THREAD(process_comb);
-        sensitive << a << b << c << d<<clk;;
+        dont_initialize();
+        sensitive << a << b << c << d;
 
         SC_THREAD(process_ff)
-        sensitive << clk;
+        sensitive << ff_d<<ff_s<<ff_r<<clk;
     }
 
     void process_ff(){
@@ -58,7 +60,6 @@ SC_MODULE(clb_one){
         while(true){
             wait();
 
-            if(clk.posedge()){
                 if(separate_luts==0){
                     
                     bool dq_mux;
@@ -71,7 +72,7 @@ SC_MODULE(clb_one){
                     }
                     
                     big_lut_address = 8*a + 4*b + 2*c + dq_mux;
-                    //cout << "accessing lut at address: "<< big_lut_address<<endl;
+                    cout << "accessing lut at address: "<< big_lut_address<<endl;
 
 
                     lut_f = big_lut[big_lut_address];
@@ -82,6 +83,7 @@ SC_MODULE(clb_one){
                     lut_g = lower_lut[lower_lut_address];
                 }
 
+                wait(SC_ZERO_TIME);
 
                 //connecting x and y outputs
 
@@ -102,8 +104,6 @@ SC_MODULE(clb_one){
                 }
 
                 cout << lut_f << lut_g<<endl;
-
-            }
 
         }
     }
@@ -129,20 +129,20 @@ SC_MODULE(clb_one){
             cout << "Unable to open file " << name << endl; 
         }
 
-        //cout << "Loading CLB with: "<<endl;
-        //cout << line <<endl;
+        cout << "Loading CLB with: "<<endl;
+        cout << line <<endl;
 
         vector<bool> bin_line = string_to_bin_vector(line);
 
         separate_luts = !bin_line[64]; // BASE FG (separate LUTs)
 
-        /*
+        
         if(separate_luts==1){
             cout << "LUTs separated."<<endl;
         }else{
             cout << "Combining into lut4on1."<<endl;
         }
-        */
+        
 
         // signal F in datasheet
         bool upper_setup_vector[8] = {bin_line[128],bin_line[96],bin_line[120],bin_line[88],bin_line[136],
