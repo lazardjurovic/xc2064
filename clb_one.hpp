@@ -55,10 +55,10 @@ SC_MODULE(clb_one){
 
     void process_comb(){
 
-        //TODO: fiugre out how to handle oscilating input
-
         while(true){
             wait();
+
+                wait(SC_ZERO_TIME);
 
                 if(separate_luts==0){
                     
@@ -85,6 +85,24 @@ SC_MODULE(clb_one){
 
                 wait(SC_ZERO_TIME);
 
+                ff_d = lut_f;
+                if(clb_muxes[0] == 1){
+                    ff_r = lut_g;
+                }else if(clb_muxes[1] == 1){
+                    ff_r = d | lut_g;
+                }
+
+                if(clb_muxes[3] == 1){
+                    ff_s = lut_f;
+                }
+
+                //DOUBLE CHECK NEEDED
+                if(clb_muxes[4] == 1){
+                    ff_q = ff_d;
+                }
+
+                wait(SC_ZERO_TIME);
+
                 //connecting x and y outputs
 
                 if(clb_muxes[5] == 1){
@@ -102,8 +120,11 @@ SC_MODULE(clb_one){
                 }else{
                     y = ff_q;
                 }
+                
+                wait(SC_ZERO_TIME);
 
-                cout << lut_f << lut_g<<endl;
+                //cout << lut_f << lut_g<<endl;
+                //cout << x << y <<endl;
 
         }
     }

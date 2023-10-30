@@ -31,7 +31,20 @@ int sc_main(int argc, char *argv[]){
     test_clb.x(x);
     test_clb.y(y);
 
-    test_clb.load_matrix("bitstream/Parse_out.txt",1); // GH CLB
+    //test_clb.load_matrix("bitstream/Parse_out.txt",1); // GH CLB
+    test_clb.load_matrix("bitstream/Parse_out.txt",14); // BG CLB
+
+    sc_trace_file *tf;
+    tf = sc_create_vcd_trace_file("tracefile");
+    tf->set_time_unit(100,SC_NS);
+
+    sc_trace(tf,clk_signal, "clk");
+    sc_trace(tf,a,"A");
+    sc_trace(tf,b,"B");
+    sc_trace(tf,c,"C");
+    sc_trace(tf,d,"D");
+    sc_trace(tf,x,"X");
+    sc_trace(tf,y,"Y");
 
     // F = ~A*Q + A*B
     // G = B
@@ -52,11 +65,13 @@ int sc_main(int argc, char *argv[]){
 
     a = 1;
     sc_start(10,SC_US);
-    //cout << x.read() << y.read()<<endl;
+    cout << x.read() << y.read()<<endl;
 
     a = 0;
-    sc_start(10,SC_US);
+    sc_start(50,SC_US);
     
+    sc_stop();
+	sc_close_vcd_trace_file(tf);
 
 
     return 0;
