@@ -9,3 +9,6 @@ main.O:
 
 clean:
 	rm main
+
+wave:
+	gtkwave tracefile.vcd
