@@ -2,8 +2,8 @@
 #include <systemc>
 
 #include "clk_gen.hpp"
-#include "clb/clb.hpp"
 #include "clb_one.hpp"
+#include "switching_matrix.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -31,8 +31,7 @@ int sc_main(int argc, char *argv[]){
     test_clb.x(x);
     test_clb.y(y);
 
-    //test_clb.load_matrix("bitstream/Parse_out.txt",1); // GH CLB
-    test_clb.load_matrix("bitstream/Parse_out.txt",14); // BG CLB
+    test_clb.load_matrix("bitstream/Parse_out.txt",0); // HH CLB
 
     sc_trace_file *tf;
     tf = sc_create_vcd_trace_file("tracefile");
@@ -49,26 +48,19 @@ int sc_main(int argc, char *argv[]){
     // F = ~A*Q + A*B
     // G = B
 
-    sc_start(10,SC_US);
-
-    d = 1;
-    sc_start(10, SC_US);
-    //cout << x.read() << y.read()<<endl;
-
-    c = 1;
-    sc_start(10,SC_US);
-    //cout << x.read() << y.read()<<endl;
-
-    b = 1;
-    sc_start(10,SC_US);
-    //cout << x.read() << y.read()<<endl;
-
-    a = 1;
-    sc_start(10,SC_US);
-    cout << x.read() << y.read()<<endl;
-
-    a = 0;
-    sc_start(50,SC_US);
+    for(int i = 0; i<=1; i++){
+        for(int j = 0; j<=1; j++){
+            for(int k = 0; k<=1; k++){
+                for(int h = 0; h<=1; h++){
+                    a = i;
+                    b = j;
+                    c = k;
+                    d = h;
+                    sc_start(10,SC_US);
+                }
+            }
+        }
+    }
     
     sc_stop();
 	sc_close_vcd_trace_file(tf);

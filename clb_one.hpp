@@ -49,6 +49,7 @@ SC_MODULE(clb_one){
                     prev_d = ff_d.read();
                 }
                 ff_q.write(prev_d);
+                wait(SC_ZERO_TIME);
             }
         }
     }
@@ -57,8 +58,6 @@ SC_MODULE(clb_one){
 
         while(true){
             wait();
-
-                wait(SC_ZERO_TIME);
 
                 if(separate_luts==0){
                     
@@ -74,11 +73,14 @@ SC_MODULE(clb_one){
                     big_lut_address = 8*a + 4*b + 2*c + dq_mux;
                     cout << "accessing lut at address: "<< big_lut_address<<endl;
 
-
                     lut_f = big_lut[big_lut_address];
                     lut_g = big_lut[big_lut_address];
 
+                    cout << "Read form lut: " <<lut_f << lut_g <<endl;
+
                 }else{
+                    // if luts are connectred
+
                     lut_f = upper_lut[upper_lut_address];
                     lut_g = lower_lut[lower_lut_address];
                 }
@@ -97,9 +99,11 @@ SC_MODULE(clb_one){
                 }
 
                 //DOUBLE CHECK NEEDED
+                /*
                 if(clb_muxes[4] == 1){
                     ff_q = ff_d;
                 }
+                */
 
                 wait(SC_ZERO_TIME);
 
@@ -107,24 +111,27 @@ SC_MODULE(clb_one){
 
                 if(clb_muxes[5] == 1){
                     x = lut_f;
+                    cout << "X is on lut_f."<<endl;
                 }else if(clb_muxes[6] ==1){
                     x = lut_g;
+                    cout << "X is on lut_g"<<endl;
                 }else{
                     x = ff_q;
+                    cout << "X is on flip flop."<<endl;
                 }
 
                 if(clb_muxes[7] == 1){
                     y = lut_g;
+                    cout << "Y is on lut_g."<<endl;
                 }else if(clb_muxes[8] == 1){
                     y = lut_f;
+                    cout << "Y is on lut_f"<<endl;
                 }else{
                     y = ff_q;
+                    cout << "Y is on flip flop."<<endl;
                 }
                 
                 wait(SC_ZERO_TIME);
-
-                //cout << lut_f << lut_g<<endl;
-                //cout << x << y <<endl;
 
         }
     }
@@ -206,7 +213,8 @@ SC_MODULE(clb_one){
         //print_array(lower_lut,8);
         print_array(big_lut,16);
         //print_array(lut_input_muxes,8);
-       // print_array(clb_muxes,12);
+        cout <<endl<< "--------- CLB MUXES ---------------" <<endl;
+        print_array(clb_muxes,12);
         
 
     }
