@@ -4,6 +4,7 @@
 #include "clk_gen.hpp"
 #include "clb_one.hpp"
 #include "switching_matrix.hpp"
+#include "conf_switch.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -12,6 +13,7 @@ using namespace sc_dt;
 int sc_main(int argc, char *argv[]){
 
     sc_signal<bool> a,b,c,d,clk_signal,x,y;
+    sc_signal<bool> swa,swb,swc;
 
     clb_one test_clb("clb");
     clk_gen clock("clock");
@@ -32,6 +34,15 @@ int sc_main(int argc, char *argv[]){
     test_clb.y(y);
 
     test_clb.load_matrix("bitstream/Parse_out.txt",0); // HH CLB
+
+    //Insatnce of configuable switch
+    conf_switch cs("configurable_switch");
+
+    cs.a(swa);
+    cs.b(swb);
+    cs.c(swc);
+
+    //generating stimuli
 
     sc_trace_file *tf;
     tf = sc_create_vcd_trace_file("tracefile");
@@ -58,9 +69,22 @@ int sc_main(int argc, char *argv[]){
             }
         }
     }
-    
-    sc_stop();
+
 	sc_close_vcd_trace_file(tf);
+
+    cout << "Testing switches." <<endl;
+
+    for(int i = 0; i<=1; i++){
+        for(int j = 0; j<=1; j++){
+            for(int k = 0; k<=1; k++){
+                swa = i;
+                swb = j;
+                swc = k;
+                sc_start(10,SC_US);
+                cout << swc << swa << swb<<endl;
+            }
+        }
+    }
 
 
     return 0;

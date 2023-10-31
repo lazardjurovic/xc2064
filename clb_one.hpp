@@ -185,12 +185,13 @@ SC_MODULE(clb_one){
 
         separate_luts = !bin_line[64]; // BASE FG (separate LUTs)
 
-        
+        #ifdef DEBUG
         if(separate_luts==1){
             cout << "LUTs separated."<<endl;
         }else{
             cout << "Combining into lut4on1."<<endl;
         }
+        #endif
         
 
         // signal F in datasheet
@@ -230,13 +231,14 @@ SC_MODULE(clb_one){
         copy_array(mux_tmp,clb_muxes,12);
 
         
+        #ifdef DEBUG
         //print_array(upper_lut,8);
         //print_array(lower_lut,8);
         print_array(big_lut,16);
         //print_array(lut_input_muxes,8);
         cout <<endl<< "--------- CLB MUXES ---------------" <<endl;
         print_array(clb_muxes,12);
-        
+        #endif
 
     }
 
