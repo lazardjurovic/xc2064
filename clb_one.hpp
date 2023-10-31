@@ -7,6 +7,8 @@
 using namespace sc_core;
 using namespace std;
 
+#define DEBUG
+
 SC_MODULE(clb_one){
 
     //entitiy ports
@@ -31,7 +33,7 @@ SC_MODULE(clb_one){
         sensitive << a << b << c << d;
 
         SC_THREAD(process_ff)
-        sensitive << ff_d<<ff_s<<ff_r<<clk;
+        sensitive << ff_d<<ff_s<<ff_r<<ff_clk;
     }
 
     void process_ff(){
@@ -40,7 +42,7 @@ SC_MODULE(clb_one){
         while(true){
             wait();
 
-            if(clk.posedge()){
+            if(ff_clk.posedge()){
                 if(ff_s.read() == 1){
                     prev_d = 1;
                 }else if(ff_r.read() == 1){
@@ -71,12 +73,17 @@ SC_MODULE(clb_one){
                     }
                     
                     big_lut_address = 8*a + 4*b + 2*c + dq_mux;
+
+                    #ifdef DEBUG
                     cout << "accessing lut at address: "<< big_lut_address<<endl;
+                    #endif
 
                     lut_f = big_lut[big_lut_address];
                     lut_g = big_lut[big_lut_address];
 
+                    #ifdef DEBUG
                     cout << "Read form lut: " <<lut_f << lut_g <<endl;
+                    #endif;
 
                 }else{
                     // if luts are connectred
@@ -111,24 +118,38 @@ SC_MODULE(clb_one){
 
                 if(clb_muxes[5] == 1){
                     x = lut_f;
-                    cout << "X is on lut_f."<<endl;
                 }else if(clb_muxes[6] ==1){
                     x = lut_g;
-                    cout << "X is on lut_g"<<endl;
                 }else{
                     x = ff_q;
-                    cout << "X is on flip flop."<<endl;
                 }
 
                 if(clb_muxes[7] == 1){
                     y = lut_g;
-                    cout << "Y is on lut_g."<<endl;
                 }else if(clb_muxes[8] == 1){
                     y = lut_f;
-                    cout << "Y is on lut_f"<<endl;
                 }else{
                     y = ff_q;
-                    cout << "Y is on flip flop."<<endl;
+                }
+
+                if(clb_muxes[9] == 1){
+                    ff_clk = c;
+
+                    #ifdef DEBUG
+                    cout << "Using c as ff_clk."<<endl;
+                    #endif
+
+                }else if(clb_muxes[10] == 1){
+                    //CLK = inverted(FF), noninverted(LATCH)
+                    //TODO
+                }else if(clb_muxes[11] == 1){
+                    //CLK = enabled
+                    ff_clk = clk;
+
+                    #ifdef DEBUG
+                    cout << "Using external clk."<<endl;
+                    #endif
+
                 }
                 
                 wait(SC_ZERO_TIME);
@@ -262,7 +283,7 @@ SC_MODULE(clb_one){
         }
     }
 
-        sc_signal<bool> ff_s, ff_q, ff_r,ff_d; //flip flor signals
+        sc_signal<bool> ff_s, ff_q, ff_r,ff_d, ff_clk; //flip flor signals
         bool upper_lut[8], lower_lut[8], big_lut[16];
         bool lut_input_muxes[8];
         bool clb_muxes[12];

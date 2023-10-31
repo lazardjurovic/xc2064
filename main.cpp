@@ -45,9 +45,6 @@ int sc_main(int argc, char *argv[]){
     sc_trace(tf,x,"X");
     sc_trace(tf,y,"Y");
 
-    // F = ~A*Q + A*B
-    // G = B
-
     for(int i = 0; i<=1; i++){
         for(int j = 0; j<=1; j++){
             for(int k = 0; k<=1; k++){
