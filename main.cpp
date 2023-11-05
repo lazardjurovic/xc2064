@@ -12,7 +12,6 @@ using namespace sc_dt;
 int sc_main(int argc, char *argv[]){
 
     sc_signal<bool> a,b,c,d,clk_signal,x,y;
-
     sc_signal<bool> sa,sb,sc,sd,se,sf,sg,sh;
     switch_matrix sw("switching matrix");
 
@@ -21,7 +20,7 @@ int sc_main(int argc, char *argv[]){
     sw.c(sc);
     sw.d(sd);
     sw.e(se);
-    sw.f(sf);
+    sw.f(x);
     sw.g(sg);
     sw.h(sh);
 
@@ -74,13 +73,6 @@ int sc_main(int argc, char *argv[]){
         }
     }
 
-    se = 1;
-    sc_start(10,SC_US);
-    cout << se << sh << endl;
-
-    sh = 0;
-    sc_start(10,SC_US);
-    cout << se << sh << endl;
 
 	sc_close_vcd_trace_file(tf);
 
