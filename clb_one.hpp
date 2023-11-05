@@ -2,7 +2,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <vector>
+
+#include "utils.hpp"
 
 using namespace sc_core;
 using namespace std;
@@ -83,7 +84,7 @@ SC_MODULE(clb_one){
 
                     #ifdef DEBUG
                     cout << "Read form lut: " <<lut_f << lut_g <<endl;
-                    #endif;
+                    #endif
 
                 }else{
                     // if luts are connectred
@@ -243,48 +244,7 @@ SC_MODULE(clb_one){
     }
 
     private:
-        
-    void copy_array(bool source[], bool destination[], int size) {
-        for (int i = 0; i < size; i++) {
-            destination[i] = source[i];
-        }
-    }
-
-    void merge_arrays(bool arr1[], int size1, bool arr2[], int size2, bool result[], int resultSize) {
-        for (int i = 0; i < size1; i++) {
-            result[i] = arr1[i];
-        }
-
-        for (int i = 0; i < size2; i++) {
-            result[size1 + i] = arr2[i];
-        }
-
-        resultSize = size1 + size2;
-    }
-
-    vector<bool> string_to_bin_vector(string line){
-
-        vector<bool> res;
-
-        for(char &c: line){
-            if(c=='0'){
-                res.push_back(0);
-            }else{
-                res.push_back(1);
-            }
-        }
-
-        return res;
-
-    }
-
-    void print_array(bool a[], int size){
-        cout << "-----------------------------" <<endl;
-        for(int i =0; i< size;i++){
-            cout << i << ": " << a[i] << endl;
-        }
-    }
-
+    
         sc_signal<bool> ff_s, ff_q, ff_r,ff_d, ff_clk; //flip flor signals
         bool upper_lut[8], lower_lut[8], big_lut[16];
         bool lut_input_muxes[8];

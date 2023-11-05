@@ -2,6 +2,9 @@
 #include <string>
 #include <vector>
 
+#include "conf_switch.hpp"
+#include "utils.hpp"
+
 using namespace sc_core;
 using namespace std;
 
@@ -23,14 +26,26 @@ SC_MODULE(switch_matrix){
 
     SC_CTOR(switch_matrix){
         SC_THREAD(proc_switch);
+        sensitive << a << b << c << d << e << f << g << h;
+
+        for(bool &bit : control){
+            bit = 0;
+        }
     }
 
     void proc_switch(){
         
         while(true){
-            
+            wait();
             if(control[0] == 1){
-                
+                if(e.posedge()){
+                    h = 1;
+                }else if(h.posedge()){
+                    e = 1;
+                }else{
+                    h = 0;
+                    e = 0;
+                }
             }
 
 
@@ -39,9 +54,9 @@ SC_MODULE(switch_matrix){
 
     }
 
-    void load_switching_config(string name, int index){
+    void load_switching_config(string filename, int index){
 
-        ifstream file(name);
+        ifstream file(filename);
         string line;
 
         if(file.is_open()){
@@ -57,44 +72,41 @@ SC_MODULE(switch_matrix){
 
             file.close();
         }else{
-            cout << "Unable to open file " << name << endl; 
+            cout << "Unable to open file " << filename << endl; 
         }
+
 
         vector<bool> line_bin = string_to_bin_vector(line);
 
         //TODO: LOAD BITS FROM LINE_BIN
 
+        bool tmp_control[20] = {line_bin[143], // 6-8
+                   line_bin[135], // 7-8
+                   line_bin[127], // 2-6
+                   line_bin[119], // 2-7
+                   line_bin[111], // 4-8
+                   line_bin[103], // 1-5
+                   line_bin[95], //  1-2
+                   line_bin[87], //  3-4
+                   line_bin[89], // 3-5
+                   line_bin[142], // 5-6
+                   line_bin[134], // 3-7
+                   line_bin[126], // 1-7
+                   line_bin[118], // 4-6
+                   line_bin[110], // 1-4
+                   line_bin[102], // 1-3
+                   line_bin[94], // 2-4
+                   line_bin[86], // 5-8
+                   line_bin[141], // 5-7
+                   line_bin[85], // 2-8
+        };
 
-
+        copy_array(tmp_control,control,20);
+        cout << "Switching matrix: " << name() << " configured with bits: " <<endl;
+        print_array(control,20); 
     }
 
 private:
 
-    vector<bool> string_to_bin_vector(string line){
-
-        vector<bool> res;
-
-        for(char &c: line){
-            if(c=='0'){
-                res.push_back(0);
-            }else{
-                res.push_back(1);
-            }
-        }
-
-        return res;
-
-    }
-
     bool control[20];
-    bool valid_connections[8][8] = {
-        {0,0,1,0,1,1,1,1},
-        {0,0,1,1,1,1,0,1},
-        {1,1,0,0,1,0,1,1},
-        {0,1,0,0,1,1,1,1},
-        {1,1,1,1,0,0,1,0},
-        {1,1,0,1,0,0,1,1},
-        {1,0,1,1,1,1,0,0},
-        {1,1,1,1,0,1,0,0,}
-    };
 };
