@@ -1,6 +1,8 @@
 #include <iostream>
 #include <systemc>
 
+#define DEBUG
+
 #include "clk_gen.hpp"
 #include "clb_one.hpp"
 #include "switching_matrix.hpp"
@@ -12,17 +14,32 @@ using namespace sc_dt;
 int sc_main(int argc, char *argv[]){
 
     sc_signal<bool> a,b,c,d,clk_signal,x,y;
-    sc_signal<bool> sa,sb,sc,sd,se,sf,sg,sh;
-    switch_matrix sw("switching matrix");
+    //sc_signal<bool> sa,sb,sc,sd,se,sf,sg,sh;
 
-    sw.a(sa);
-    sw.b(sb);
-    sw.c(sc);
-    sw.d(sd);
-    sw.e(se);
-    sw.f(x);
-    sw.g(sg);
-    sw.h(sh);
+    sc_signal<bool> clb_out;
+
+    vector<int> switch_inputs = {1,2,3,4};
+    vector<int> switch_outputs = {5,6,7,8};
+
+    // switching matrix for test
+
+    switch_matrix sw("matrix1",switch_inputs,switch_outputs);
+
+    vector<sc_signal<bool>*> switch_in_signals;
+    vector<sc_signal<bool>*> switch_out_signals;
+
+
+    for(int i =0; i<sw.get_in_count();i++){
+        switch_in_signals.push_back(new sc_signal<bool>);
+    }
+
+    for(int i =0; i<sw.get_out_count();i++){
+        switch_out_signals.push_back(new sc_signal<bool>);
+    }
+
+    sw.bind_ports(switch_in_signals,switch_out_signals);
+
+    // clb for test
 
     clb_one test_clb("clb");
     clk_gen clock("clock");
@@ -43,7 +60,8 @@ int sc_main(int argc, char *argv[]){
     test_clb.y(y);
 
     test_clb.load_matrix("bitstream/Parse_out.txt",0); // HH CLB
-    sw.load_switching_config("bitstream/Parse_out.txt",0); // HH CLB
+    
+    //sw.load_switching_config("bitstream/Parse_out.txt",0); // HH CLB
 
     //generating stimuli
 
@@ -73,6 +91,9 @@ int sc_main(int argc, char *argv[]){
         }
     }
 
+    switch_in_signals[0]->write(1);
+    sc_start(10,SC_US);
+    cout <<"Read from switch: " << switch_out_signals[0]->read() <<endl;
 
 	sc_close_vcd_trace_file(tf);
 

@@ -1,6 +1,7 @@
 #include <systemc>
 #include <string>
 #include <vector>
+#include <cstring>
 
 #include "utils.hpp"
 
@@ -10,55 +11,92 @@ using namespace std;
 SC_MODULE(switch_matrix){
 
 //entity ports
-    sc_in<bool> a,b,c,d,e,f,g,h;
+    vector<sc_in<bool>*> in_ports;
+    vector<sc_out<bool>*> out_ports;
 
-    /*
-    a-1
-    b-2
-    c-3
-    d-4
-    e-5
-    f-6
-    g-7
-    h-8
-    */
+    //parametrized constructor
+    switch_matrix(sc_module_name name, vector<int> input_indexes, vector<int> output_indexes) : sc_module(name){
 
-    SC_CTOR(switch_matrix){
-        SC_THREAD(proc_switch);
-        sensitive << a << b << c << d << e << f << g << h;
+        input_port_count = input_indexes.size();
+        output_port_count = output_indexes.size();
 
-        for(bool &bit : control){
-            bit = 0;
+        if((input_port_count + output_port_count) != 8){
+            cout << "Fatal error. Switcing matrix must have 8 ports."<< endl;
+            exit(EXIT_FAILURE);
         }
 
-        for(bool &state : states){
-            state = 0;
+        // code for initializing vectors that represent input and output portss
+
+        for(int i = 0; i< input_port_count;i++){
+
+            string tmp_name = "in";
+            tmp_name.append(to_string(i));
+            int len = tmp_name.length();
+            char *port_name = new char[len + 1];
+            strcpy(port_name,tmp_name.c_str());
+
+            in_ports.push_back(new sc_in<bool>(port_name));
+            
+            #ifdef DEBUG
+            cout << "Created input port " << tmp_name<< " in " << name << endl;
+            #endif
+        }
+
+        for(int i = 0; i< output_port_count;i++){
+
+            string tmp_name = "out";
+            tmp_name.append(to_string(i));
+            int len = tmp_name.length();
+            char *port_name = new char[len + 1];
+            strcpy(port_name,tmp_name.c_str());
+
+            out_ports.push_back(new sc_out<bool>(port_name));
+            
+            #ifdef DEBUG
+            cout << "Created output port " << tmp_name<< " in " << name << endl;
+            #endif
+        }
+
+        SC_HAS_PROCESS(switch_matrix);
+        SC_THREAD(proc);
+
+        for(int i = 0; i<in_ports.size();i++){
+            sensitive << *in_ports[i];
+        }
+
+        cout << endl;
+    
+    }
+
+    ~switch_matrix(){
+        // free memory
+        for (auto port : in_ports) {
+            delete port;
+        }
+
+        for (auto port : out_ports) {
+            delete port;
+        }
+    }
+
+    void bind_ports(vector<sc_signal<bool>*> inputs, vector<sc_signal<bool>*> outputs){
+        for(int i = 0; i<input_port_count; i++){
+            this->in_ports[i]->bind(*inputs[i]);
+        }
+
+        for(int i = 0 ; i<output_port_count; i++){
+            this->out_ports[i]->bind(*outputs[i]);
         }
 
     }
 
-    void proc_switch(){
-        
+    void proc(){
         while(true){
             wait();
+                cout << "Something happened" << endl;
 
-            bool states_new[] = {a.read(),b.read(),c.read(),d.read(),e.read(),f.read(),g.read(),h.read()};
-
-            for(int i = 0; i<8;i++){
-                if(states_new[i] != states[i]){ // detect changes -- those pins are input pins
-                    for(int j =0;j<8;j++){
-                        if(matrix[i][j] == 1){
-                            #ifdef DEBUG
-                            cout << "Pin input on: " << i << " changed state of pin: "<< j <<endl;
-                            #endif
-                        }
-                    }
-                }
-            }
-
-
+                //TODO: proess connected input and output ports
         }
-
     }
 
     void load_switching_config(string filename, int index){
@@ -115,6 +153,14 @@ SC_MODULE(switch_matrix){
 
         make_matrix(control);
     } 
+
+    int get_in_count(){
+        return input_port_count;
+    }
+
+    int get_out_count(){
+        return output_port_count;
+    }
 
 private:
 
@@ -175,6 +221,7 @@ private:
     bool control[20];
     bool states[8];
     bool matrix[8][8] = {};
-    sc_in<bool>* pins[8] = {&a,&b,&c,&d,&e,&f,&g,&h};
+    int input_port_count, output_port_count;
+
 
 };
