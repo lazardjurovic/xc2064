@@ -15,10 +15,15 @@ SC_MODULE(switch_matrix){
     vector<sc_out<bool>*> out_ports;
 
     //parametrized constructor
-    switch_matrix(sc_module_name name, vector<int> input_indexes, vector<int> output_indexes) : sc_module(name){
+    switch_matrix(sc_module_name name, vector<int> i_indexes, vector<int> o_indexes) : sc_module(name){
 
-        input_port_count = input_indexes.size();
-        output_port_count = output_indexes.size();
+        input_port_count = i_indexes.size();
+        output_port_count = o_indexes.size();
+
+        input_indexes = i_indexes;
+        output_indexes = o_indexes;
+
+        
 
         if((input_port_count + output_port_count) != 8){
             cout << "Fatal error. Switcing matrix must have 8 ports."<< endl;
@@ -93,9 +98,18 @@ SC_MODULE(switch_matrix){
     void proc(){
         while(true){
             wait();
-                cout << "Something happened" << endl;
 
-                //TODO: proess connected input and output ports
+                //TODO: proess connected input and output ports 
+
+                for(int i = 0; i< input_indexes.size();i++){
+                    for(int j=0; j<output_indexes.size();j++){
+                        if(matrix[i][j] == 1){ // if inptu and output ports are connectred
+                            out_ports[i]->write(in_ports[i]->read());
+                        }
+                    }
+                }
+
+
         }
     }
 
@@ -222,6 +236,6 @@ private:
     bool states[8];
     bool matrix[8][8] = {};
     int input_port_count, output_port_count;
-
+    vector<int> input_indexes, output_indexes;
 
 };

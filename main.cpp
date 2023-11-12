@@ -24,6 +24,7 @@ int sc_main(int argc, char *argv[]){
     // switching matrix for test
 
     switch_matrix sw("matrix1",switch_inputs,switch_outputs);
+    sw.load_switching_config("bitstream/Parse_out.txt",0);
 
     vector<sc_signal<bool>*> switch_in_signals;
     vector<sc_signal<bool>*> switch_out_signals;
