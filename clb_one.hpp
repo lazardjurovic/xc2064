@@ -158,6 +158,16 @@ SC_MODULE(clb_one){
         }
     }
 
+    void bind_ports(vector<sc_signal<bool>*> signals){
+        a.bind(*signals[0]);
+        b.bind(*signals[1]);
+        c.bind(*signals[2]);
+        d.bind(*signals[3]);
+        clk.bind(*signals[4]);
+        x.bind(*signals[5]);
+        y.bind(*signals[6]);
+    }
+
     void load_matrix(string name, int index){
 
         ifstream file(name);
