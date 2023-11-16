@@ -2,8 +2,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include "utils.hpp"
 
+using namespace std;
+using namespace sc_core;
 
 SC_MODULE(pip){
 
@@ -28,14 +31,14 @@ SC_MODULE(pip){
                 line_cnt++;
             }
 
-        ile.close();
+        file.close();
     }else{
         cout << "Unable to open file " << filename << endl; 
     }
 
     vector<bool> line_bin = string_to_bin_vector(line);
 
-    pip_connections = { line_bin[140], // PIP B1,BY
+    bool tmp_pip_connections[28] = { line_bin[140], // PIP B1,BY
                         line_bin[132], // PIP C1,C2
                         line_bin[124], // PIP B2,BC
                         line_bin[116], // PIP B4,B5
@@ -63,7 +66,9 @@ SC_MODULE(pip){
                         line_bin[3], //   PIP D2,D5 (inverted)
                         line_bin[21], //  PIP D3,D4,D5
                         line_bin[37], //  PIP A3,AX
-    }    
+    };    
+
+    copy_array(tmp_pip_connections,pip_connections,28);
 
   }  
 
