@@ -218,13 +218,6 @@ SC_MODULE(switch_matrix){
         make_matrix(control);
     } 
 
-    int get_in_count(){
-        return input_port_count;
-    }
-
-    int get_out_count(){
-        return output_port_count;
-    }
 
 private:
 
@@ -285,7 +278,5 @@ private:
     bool control[20];
     bool states[8];
     bool matrix[8][8] = {};
-    int input_port_count, output_port_count;
-    vector<int> input_indexes, output_indexes;
 
 };
