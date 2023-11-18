@@ -11,105 +11,155 @@ using namespace std;
 SC_MODULE(switch_matrix){
 
 //entity ports
-    vector<sc_in<bool>*> in_ports;
-    vector<sc_out<bool>*> out_ports;
+   //entity ports
+    vector<sc_inout<bool>*> ports;
 
     //parametrized constructor
-    switch_matrix(sc_module_name name, vector<int> i_indexes, vector<int> o_indexes) : sc_module(name){
+    switch_matrix(sc_module_name name) : sc_module(name){
 
-        input_port_count = i_indexes.size();
-        output_port_count = o_indexes.size();
+        cout << "Creating new switching matrix"<<endl;
 
-        input_indexes = i_indexes;
-        output_indexes = o_indexes;
+        //initilizing ports
 
-        
-
-        if((input_port_count + output_port_count) != 8){
-            cout << "Fatal error. Switcing matrix must have 8 ports."<< endl;
-            exit(EXIT_FAILURE);
-        }
-
-        // code for initializing vectors that represent input and output portss
-
-        for(int i = 0; i< input_port_count;i++){
-
-            string tmp_name = "in";
-            tmp_name.append(to_string(i));
-            int len = tmp_name.length();
-            char *port_name = new char[len + 1];
-            strcpy(port_name,tmp_name.c_str());
-
-            in_ports.push_back(new sc_in<bool>(port_name));
-            
-            #ifdef DEBUG
-            cout << "Created input port " << tmp_name<< " in " << name << endl;
-            #endif
-        }
-
-        for(int i = 0; i< output_port_count;i++){
-
-            string tmp_name = "out";
-            tmp_name.append(to_string(i));
-            int len = tmp_name.length();
-            char *port_name = new char[len + 1];
-            strcpy(port_name,tmp_name.c_str());
-
-            out_ports.push_back(new sc_out<bool>(port_name));
-            
-            #ifdef DEBUG
-            cout << "Created output port " << tmp_name<< " in " << name << endl;
-            #endif
+        for(int i =0; i<8;i++){
+            ports.push_back(new sc_inout<bool>);
         }
 
         SC_HAS_PROCESS(switch_matrix);
-        SC_THREAD(proc);
 
-        for(int i = 0; i<in_ports.size();i++){
-            sensitive << *in_ports[i];
+        SC_THREAD(pa);
+        sensitive << *ports[0];
+        SC_THREAD(pb);
+        sensitive << *ports[1];
+        SC_THREAD(pc);
+        sensitive << *ports[2];
+        SC_THREAD(pd);
+        sensitive << *ports[3];
+        SC_THREAD(pe);
+        sensitive << *ports[4];
+        SC_THREAD(pf);
+        sensitive << *ports[5];
+        SC_THREAD(pg);
+        sensitive << *ports[6];
+        SC_THREAD(ph);
+        sensitive << *ports[7];
+
+    }
+
+    void bind_ports(vector<sc_signal<bool>*> sigs){
+        for(int i =0; i<8;i++){
+            ports[i]->bind(*sigs[i]);
         }
-
-        cout << endl;
-    
     }
 
     ~switch_matrix(){
         // free memory
-        for (auto port : in_ports) {
-            delete port;
-        }
-
-        for (auto port : out_ports) {
+        for (auto port : ports) {
             delete port;
         }
     }
 
-    void bind_ports(vector<sc_signal<bool>*> inputs, vector<sc_signal<bool>*> outputs){
-        for(int i = 0; i<input_port_count; i++){
-            this->in_ports[i]->bind(*inputs[i]);
-        }
-
-        for(int i = 0 ; i<output_port_count; i++){
-            this->out_ports[i]->bind(*outputs[i]);
-        }
-
-    }
-
-    void proc(){
+    void pa(){
         while(true){
             wait();
-
-                //TODO: proess connected input and output ports 
-
-                for(int i = 0; i< input_indexes.size();i++){
-                    for(int j=0; j<output_indexes.size();j++){
-                        if(matrix[i][j] == 1){ // if inptu and output ports are connectred
-                            out_ports[i]->write(in_ports[i]->read());
-                        }
+                int col = 0;
+                for(int j = 0; j<8;j++){
+                    if(matrix[col][j] == 1){
+                        ports[j]->write(ports[col]->read());
+                        wait(SC_ZERO_TIME);
                     }
                 }
+        }
+    }
 
+     void pb(){
+        while(true){
+            wait();
+                int col = 1;
+                for(int j = 0; j<8;j++){
+                    if(matrix[col][j] == 1){
+                        ports[j]->write(ports[col]->read());
+                        wait(SC_ZERO_TIME);
+                    }
+                }
+        }
+    }
 
+    void pc(){
+        while(true){
+            wait();
+                int col = 2;
+                for(int j = 0; j<8;j++){
+                    if(matrix[col][j] == 1){
+                        ports[j]->write(ports[col]->read());
+                        wait(SC_ZERO_TIME);
+                    }
+                }
+        }
+    }
+
+    void pd(){
+        while(true){
+            wait();
+                int col = 3;
+                for(int j = 0; j<8;j++){
+                    if(matrix[col][j] == 1){
+                        ports[j]->write(ports[col]->read());
+                        wait(SC_ZERO_TIME);
+                    }
+                }
+        }
+    }
+
+    void pe(){
+        while(true){
+            wait();
+                int col = 4;
+                for(int j = 0; j<8;j++){
+                    if(matrix[col][j] == 1){
+                        ports[j]->write(ports[col]->read());
+                        wait(SC_ZERO_TIME);
+                    }
+                }
+        }
+    }
+    
+    void pf(){
+        while(true){
+            wait();
+                int col = 5;
+                for(int j = 0; j<8;j++){
+                    if(matrix[col][j] == 1){
+                        ports[j]->write(ports[col]->read());
+                        wait(SC_ZERO_TIME);
+                    }
+                }
+        }
+    }
+
+    void pg(){
+        while(true){
+            wait();
+                int col = 6;
+                for(int j = 0; j<8;j++){
+                    if(matrix[col][j] == 1){
+                        ports[j]->write(ports[col]->read());
+                        wait(SC_ZERO_TIME);
+                    }
+                }
+        }
+    }
+
+    void ph(){
+        while(true){
+            wait();
+                int col = 7;
+                for(int j = 0; j<8;j++){
+                    if(matrix[col][j] == 1){
+                        ports[j]->write(ports[col]->read());
+                        wait(SC_ZERO_TIME);
+                    }
+                }
         }
     }
 
