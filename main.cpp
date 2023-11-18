@@ -24,7 +24,7 @@ int sc_main(int argc, char *argv[]){
             sigs.push_back(new sc_signal<bool>);
     }
 
-    switch_matrix sw("matrix1");
+    switch_matrix sw("matrix1",1);
     sw.load_switching_config("bitstream/Parse_out.txt",0);
     sw.bind_ports(sigs);
 

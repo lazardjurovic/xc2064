@@ -9,13 +9,12 @@ using namespace sc_core;
 using namespace std;
 
 SC_MODULE(switch_matrix){
-
-//entity ports
+    
    //entity ports
     vector<sc_inout<bool>*> ports;
 
     //parametrized constructor
-    switch_matrix(sc_module_name name) : sc_module(name){
+    switch_matrix(sc_module_name name, int n) : sc_module(name){
 
         cout << "Creating new switching matrix"<<endl;
 
@@ -187,7 +186,7 @@ SC_MODULE(switch_matrix){
 
         vector<bool> line_bin = string_to_bin_vector(line);
 
-        //TODO: LOAD BITS FROM LINE_BIN
+        //TODO: CHECK IF N IS 1 OR 2
 
         bool tmp_control[20] = {line_bin[143], // 6-8
                    line_bin[135], // 7-8
