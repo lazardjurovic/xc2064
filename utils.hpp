@@ -3,6 +3,10 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
+
+using namespace std;
+
 
 void print_array(bool a[], int size){
     std::cout << "-----------------------------" <<std::endl;
@@ -44,6 +48,13 @@ std::vector<bool> string_to_bin_vector(std::string line){
 
     return res;
 
+}
+
+void print_vector(std::vector<bool> v){
+    for(int i =0; i< v.size(); i++){
+        cout << v[i] << " ";
+    }
+    cout << endl;
 }
 
 

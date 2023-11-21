@@ -1,8 +1,7 @@
 #include <systemc>
-#include <iostream>
-#include <string>
 #include <vector>
-#include <fstream>
+#include <iostream>
+
 #include "utils.hpp"
 
 using namespace std;
@@ -11,68 +10,87 @@ using namespace sc_core;
 SC_MODULE(pip){
 
     //entity ports
+    vector<sc_inout<bool>*> ports;
+    sc_in<bool> control;
 
-    sc_in<bool> x, y;
-    sc_out<bool> b,c,k,a,d;
+    SC_CTOR(pip){
 
-  pip(sc_module_name name, string filename, int index ) : sc_module(name){
-    
-    ifstream file(filename);
-    string line;
+        for(int i =0; i<4;i++){
+            ports.push_back(new sc_inout<bool>);
+        }
 
-    if(file.is_open()){
+        SC_THREAD(proc);
+        sensitive << *ports[0] << *ports[1] << *ports[2] << *ports[3];
+        /*
+        for(int i =0; i<4; i++){
+            sensitive << *ports[i];
+        }
+        */
         
-        int line_cnt = 0;
+        #ifdef DEBUG
+        cout << "Created PIP." <<endl;
+        #endif
 
-        while(getline(file,line)){
-            if(line_cnt == index){
-                break;
-            }
-                line_cnt++;
-            }
-
-        file.close();
-    }else{
-        cout << "Unable to open file " << filename << endl; 
     }
 
-    vector<bool> line_bin = string_to_bin_vector(line);
+    void proc(){
+        while(true){
+            wait();
+            bool new_state[4];
 
-    bool tmp_pip_connections[28] = { line_bin[140], // PIP B1,BY
-                        line_bin[132], // PIP C1,C2
-                        line_bin[124], // PIP B2,BC
-                        line_bin[116], // PIP B4,B5
-                        line_bin[108], // PIP c4,C5
-                        line_bin[100], // PIP C6,C7
-                        line_bin[92], //  PIP B6,B7
-                        line_bin[84], //  PIP C3,CX (inverted)
-                        line_bin[76], //  PIP X2
-                        line_bin[68], //  PIP C1,C3,C4,C7
-                        line_bin[60], //  PIP B3,BX (inverted)
-                        line_bin[52], //  PIP B2,B5,B6,BX,BY 
-                        line_bin[139], // PIP Y1
-                        line_bin[131], // PIP Y3
-                        line_bin[123], // PIP K2
-                        line_bin[115], // PIP K1
-                        line_bin[83], //  PIP X1
-                        line_bin[67], //  PIP X3
-                        line_bin[59], //  PIP Y4
-                        line_bin[51], //  PIP Y2
-                        line_bin[43], //  PIP D3,DX
-                        line_bin[35], //  PIP D1, D4
-                        line_bin[27], //  PIP A1,A4
-                        line_bin[19], //  PIP A3,A4,A5
-                        line_bin[11], //  PIP A2,A5 (inverted)
-                        line_bin[3], //   PIP D2,D5 (inverted)
-                        line_bin[21], //  PIP D3,D4,D5
-                        line_bin[37], //  PIP A3,AX
-    };    
+            for(int i =0; i<4;i++){
+                new_state[i] = ports[i]->read();
+            }
 
-    copy_array(tmp_pip_connections,pip_connections,28);
+            if(control == 1){
+                
+                // find index of port that changed
 
-  }  
+                int index_changed;
+
+                for(int i =0; i<4;i++){
+                    if(last_state[i]  != new_state[i]){
+                        index_changed = i;
+                        
+                        #ifdef DEBUG
+                        cout << "Detected change on " << name() << "on port "<< index_changed <<endl;
+                        #endif
+
+                        break;
+                    }
+                }
+
+
+                // update all ports according to one that changed
+
+                for(int i =0; i<4; i++){
+                    if(i != index_changed){
+                        ports[i]->write(ports[index_changed]->read());
+                    }
+                }
+
+                wait(SC_ZERO_TIME);
+
+                copy_array(new_state,last_state,4);
+
+            }
+        }
+    }    
+
+    
+    void bind_ports(vector<sc_signal<bool>*> sigs){
+        for(int i =0; i<4;i++){
+            ports[i]->bind(*sigs[i]);
+        }
+    }
+
+    ~pip(){
+        for(auto port : ports){
+            delete port;
+        }
+    }
 
 private:
-    bool pip_connections[28];
+    bool last_state[4];
 
 };
