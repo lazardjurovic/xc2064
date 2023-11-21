@@ -94,14 +94,24 @@ int sc_main(int argc, char *argv[]){
 
 	sc_close_vcd_trace_file(tf);
 
-    
+    // PIP stimuli
+
+    cout << endl << endl <<"Testing PIP." <<endl;
+
     pip_control = 1;
     pip_ports[0]->write(1);
     sc_start(10,SC_NS);
-    cout << pip_ports[1]->read() << pip_ports[2]->read() << pip_ports[3]->read();
+    cout << pip_ports[1]->read() << pip_ports[2]->read() << pip_ports[3]->read() <<endl;
     pip_ports[0]->write(0);
     sc_start(10,SC_NS);
-    cout << pip_ports[1]->read() << pip_ports[2]->read() << pip_ports[3]->read();
+    cout << pip_ports[1]->read() << pip_ports[2]->read() << pip_ports[3]->read()<<endl;
+
+    // Switching matrix stimuli
+
+    cout <<endl << endl << "Testing Switvhing matrix." <<endl;
+
+    sigs[0]->write(1);
+    sc_start(10,SC_NS);
 
     return 0;
 

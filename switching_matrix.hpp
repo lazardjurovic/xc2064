@@ -17,7 +17,7 @@ SC_MODULE(switch_matrix){
     //parametrized constructor
     switch_matrix(sc_module_name name, int n) : sc_module(name){
 
-        cout << "Creating new switching matrix"<<endl;
+        cout << "Creating new switching matrix."<<endl;
 
         //initilizing ports
 
@@ -27,22 +27,10 @@ SC_MODULE(switch_matrix){
 
         SC_HAS_PROCESS(switch_matrix);
 
-        SC_THREAD(pa);
-        sensitive << *ports[0];
-        SC_THREAD(pb);
-        sensitive << *ports[1];
-        SC_THREAD(pc);
-        sensitive << *ports[2];
-        SC_THREAD(pd);
-        sensitive << *ports[3];
-        SC_THREAD(pe);
-        sensitive << *ports[4];
-        SC_THREAD(pf);
-        sensitive << *ports[5];
-        SC_THREAD(pg);
-        sensitive << *ports[6];
-        SC_THREAD(ph);
-        sensitive << *ports[7];
+        SC_THREAD(proc);
+        for(int i =0; i<8; i++){
+            sensitive << *ports[i];
+        }
 
     }
 
@@ -59,107 +47,40 @@ SC_MODULE(switch_matrix){
         }
     }
 
-    void pa(){
+    void proc(){
         while(true){
             wait();
-                int col = 0;
-                for(int j = 0; j<8;j++){
-                    if(matrix[col][j] == 1){
-                        ports[j]->write(ports[col]->read());
-                        wait(SC_ZERO_TIME);
-                    }
-                }
-        }
-    }
 
-     void pb(){
-        while(true){
-            wait();
-                int col = 1;
-                for(int j = 0; j<8;j++){
-                    if(matrix[col][j] == 1){
-                        ports[j]->write(ports[col]->read());
-                        wait(SC_ZERO_TIME);
-                    }
-                }
-        }
-    }
+            bool new_state[8];
 
-    void pc(){
-        while(true){
-            wait();
-                int col = 2;
-                for(int j = 0; j<8;j++){
-                    if(matrix[col][j] == 1){
-                        ports[j]->write(ports[col]->read());
-                        wait(SC_ZERO_TIME);
-                    }
-                }
-        }
-    }
+            for(int i=0; i<8;i++){
+                new_state[i] = ports[i]->read();
+            }
 
-    void pd(){
-        while(true){
-            wait();
-                int col = 3;
-                for(int j = 0; j<8;j++){
-                    if(matrix[col][j] == 1){
-                        ports[j]->write(ports[col]->read());
-                        wait(SC_ZERO_TIME);
-                    }
-                }
-        }
-    }
+            // find index of pin that changed
+            int index_changed;
 
-    void pe(){
-        while(true){
-            wait();
-                int col = 4;
-                for(int j = 0; j<8;j++){
-                    if(matrix[col][j] == 1){
-                        ports[j]->write(ports[col]->read());
-                        wait(SC_ZERO_TIME);
-                    }
-                }
-        }
-    }
-    
-    void pf(){
-        while(true){
-            wait();
-                int col = 5;
-                for(int j = 0; j<8;j++){
-                    if(matrix[col][j] == 1){
-                        ports[j]->write(ports[col]->read());
-                        wait(SC_ZERO_TIME);
-                    }
-                }
-        }
-    }
+            for(int i =0; i<8;i++){
+                if(new_state[i] != states[i]){
+                    index_changed = i;
 
-    void pg(){
-        while(true){
-            wait();
-                int col = 6;
-                for(int j = 0; j<8;j++){
-                    if(matrix[col][j] == 1){
-                        ports[j]->write(ports[col]->read());
-                        wait(SC_ZERO_TIME);
-                    }
-                }
-        }
-    }
+                    #ifdef DEBUG
+                    cout << "Detected change on " << name() << "on port "<< index_changed <<endl;
+                    #endif
 
-    void ph(){
-        while(true){
-            wait();
-                int col = 7;
-                for(int j = 0; j<8;j++){
-                    if(matrix[col][j] == 1){
-                        ports[j]->write(ports[col]->read());
-                        wait(SC_ZERO_TIME);
-                    }
+                    break;
                 }
+            }   
+            
+            // update all ports connected to index_changed
+
+            for(int i=0;i<8;i++){
+                if(matrix[i][index_changed] == 1){
+                    ports[i]->write(ports[index_changed]->read());
+                    wait(SC_ZERO_TIME);
+                }
+            }
+
         }
     }
 
