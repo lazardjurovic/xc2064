@@ -57,6 +57,13 @@ void print_vector(std::vector<bool> v){
     cout << endl;
 }
 
+void vector_to_array(std::vector<bool> v, bool array[]){
+
+    for(int i =0; i<v.size(); i++){
+        array[i] = v[i];
+    }
+
+}
 
 
 #endif
