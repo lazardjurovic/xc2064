@@ -13,14 +13,15 @@ SC_MODULE(pip){
     vector<sc_inout<bool>*> ports;
     sc_in<bool> control;
 
-    SC_CTOR(pip){
+    pip(sc_module_name name) : sc_module(name){
 
         for(int i =0; i<4;i++){
             ports.push_back(new sc_inout<bool>);
         }
 
+        SC_HAS_PROCESS(pip);
         SC_THREAD(proc);
-        
+
         for(int i =0; i<4; i++){
             sensitive << *ports[i];
         }
