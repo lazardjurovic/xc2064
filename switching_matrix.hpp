@@ -1,3 +1,6 @@
+#ifndef SWITCHING_MATRIX_HPP
+#define SWITCHING_MATRIX_HPP
+
 #include <systemc>
 #include <string>
 #include <vector>
@@ -163,8 +166,11 @@ SC_MODULE(switch_matrix){
         }
 
         vector_to_array(tmp_control,control);
+
+        #ifdef DEBUG
         cout << "Switching matrix: " << name() << " configured with bits: " <<endl;
         print_array(control,20); 
+        #endif
 
         make_matrix(control);
     } 
@@ -277,3 +283,5 @@ private:
 
 
 };
+
+#endif

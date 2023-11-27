@@ -1,3 +1,6 @@
+#ifndef PIP_HPP
+#define PIP_HPP
+
 #include <systemc>
 #include <vector>
 #include <iostream>
@@ -93,3 +96,5 @@ private:
     bool last_state[4];
 
 };
+
+#endif
