@@ -16,18 +16,19 @@ SC_MODULE(pip){
     vector<sc_inout<bool>*> ports;
     sc_in<bool> control;
 
-    pip(sc_module_name name) : sc_module(name){
+    SC_CTOR(pip){
 
         for(int i =0; i<4;i++){
             ports.push_back(new sc_inout<bool>);
         }
 
-        SC_HAS_PROCESS(pip);
         SC_THREAD(proc);
-
+        sensitive << *ports[0] << *ports[1] << *ports[2] << *ports[3];
+        /*
         for(int i =0; i<4; i++){
             sensitive << *ports[i];
         }
+        */
         
         #ifdef DEBUG
         cout << "Created PIP." <<endl;
@@ -48,7 +49,7 @@ SC_MODULE(pip){
                 
                 // find index of port that changed
 
-                int index_changed;
+                int index_changed = 0;
 
                 for(int i =0; i<4;i++){
                     if(last_state[i]  != new_state[i]){
