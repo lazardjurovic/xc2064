@@ -5,6 +5,7 @@
         "iostream": "cpp",
         "string": "cpp",
         "systemc": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "new": "cpp"
     }
 }

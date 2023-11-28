@@ -278,7 +278,7 @@ private:
 
     bool control[20];
     bool states[8];
-    bool matrix[8][8] = {};
+    bool matrix[9][9] = {}; // fix size error
     int n_matrix;
 
 

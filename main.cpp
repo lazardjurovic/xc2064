@@ -7,6 +7,7 @@
 #include "clb_one.hpp"
 #include "switching_matrix.hpp"
 #include "pip.hpp"
+#include "switching_block.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -14,9 +15,10 @@ using namespace sc_dt;
 
 int sc_main(int argc, char *argv[]){
 
+    sc_report_handler::set_actions (SC_WARNING, SC_DO_NOTHING);
+
     sc_signal<bool> a,b,c,d,clk_signal,x,y;
     sc_signal<bool> clb_out;
-
 
     //test of pip
     vector<sc_signal<bool>*> pip_ports;
@@ -26,6 +28,26 @@ int sc_main(int argc, char *argv[]){
         pip_ports.push_back(new sc_signal<bool>);
     }
 
+    
+
+    switching_block sb("Switching_Block1","bitstream/Parse_out.txt",0);
+
+    vector<sc_signal<bool>*> block_signals;
+
+    for(int i =0; i<28;i++){
+        block_signals.push_back(new sc_signal<bool>("singal"));
+    }
+
+    sb.bind_ports(block_signals);
+
+    block_signals[0]->write(0);
+    sc_start(10,SC_US);
+    block_signals[0]->write(1);
+    //sc_start(10,SC_US);
+
+    cout << "Ended simulation."<<endl;
+
+/*
     pip pip_dut("pip_dut");
     pip_dut.bind_ports(pip_ports);
     pip_dut.control(pip_control);
@@ -112,6 +134,18 @@ int sc_main(int argc, char *argv[]){
 
     sigs[0]->write(1);
     sc_start(10,SC_NS);
+
+    */
+
+
+    for(int i =0; i<pip_ports.size();i++){
+        delete pip_ports[i];
+    }
+    for(int i =0; i<block_signals.size();i++){
+        delete block_signals[i];
+    }
+
+
 
     return 0;
 
