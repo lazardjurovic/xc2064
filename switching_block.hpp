@@ -5,6 +5,7 @@
 
 #include "switching_matrix.hpp"
 #include "pip.hpp"
+#include "interface.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -14,6 +15,7 @@ SC_MODULE(switching_block){
     //entity ports
 
     vector<sc_inout<bool>*> ports;
+    sc_export<interface> out;
 
     switching_block(sc_module_name name, string filename, int index) : sc_module(name), sw1("sw1",1), sw2("sw2",2){
 
@@ -31,13 +33,16 @@ SC_MODULE(switching_block){
             nd_pips.push_back(new pip("pip"));
         }
 
+        // TODO: connect control        
         for(auto nd_pip: nd_pips){
             vector<sc_signal<bool>*> sigs = create_signal_vector(4);
             nd_pip->bind_ports(sigs);
             nd_pip_signals.push_back(sigs);
         }
 
+        interface a(nd_pip_signals.at(0).at(0));
 
+        out.bind(a);
 
     }
 

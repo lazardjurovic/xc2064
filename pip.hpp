@@ -23,12 +23,10 @@ SC_MODULE(pip){
         }
 
         SC_THREAD(proc);
-        sensitive << *ports[0] << *ports[1] << *ports[2] << *ports[3];
-        /*
+        
         for(int i =0; i<4; i++){
             sensitive << *ports[i];
         }
-        */
         
         #ifdef DEBUG
         cout << "Created PIP." <<endl;
