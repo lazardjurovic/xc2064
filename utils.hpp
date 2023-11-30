@@ -6,6 +6,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace sc_dt;
 
 
 void print_array(bool a[], int size){
@@ -17,6 +18,12 @@ void print_array(bool a[], int size){
 
 
 void copy_array(bool source[], bool destination[], int size) {
+    for (int i = 0; i < size; i++) {
+        destination[i] = source[i];
+    }
+}
+
+void copy_logic_array(sc_logic source[], sc_logic destination[], int size) {
     for (int i = 0; i < size; i++) {
         destination[i] = source[i];
     }
