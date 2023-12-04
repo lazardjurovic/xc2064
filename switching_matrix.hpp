@@ -11,11 +11,12 @@
 
 using namespace sc_core;
 using namespace std;
+using namespace sc_dt;
 
 SC_MODULE(switch_matrix){
     
    //entity ports
-    vector<sc_inout<bool>*> ports;
+    sc_port<sc_signal_inout_if<sc_logic>> ports[8];
 
     //parametrized constructor
     switch_matrix(sc_module_name name, int n) : sc_module(name){
@@ -25,37 +26,20 @@ SC_MODULE(switch_matrix){
 
         //initilizing ports
 
-        for(int i =0; i<8;i++){
-            ports.push_back(new sc_inout<bool>);
-        }
-
         SC_HAS_PROCESS(switch_matrix);
 
         SC_THREAD(proc);
         for(int i =0; i<8; i++){
-            sensitive << *ports[i];
+            sensitive << ports[i];
         }
 
-    }
-
-    void bind_ports(vector<sc_signal<bool>*> sigs){
-        for(int i =0; i<8;i++){
-            ports[i]->bind(*sigs[i]);
-        }
-    }
-
-    ~switch_matrix(){
-        // free memory
-        for (auto port : ports) {
-            delete port;
-        }
     }
 
     void proc(){
         while(true){
             wait();
 
-            bool new_state[8];
+            sc_logic new_state[8];
 
             for(int i=0; i<8;i++){
                 new_state[i] = ports[i]->read();
@@ -277,7 +261,7 @@ private:
     }
 
     bool control[20];
-    bool states[8];
+    sc_logic states[8];
     bool matrix[9][9] = {}; // fix size error
     int n_matrix;
 
