@@ -9,19 +9,18 @@
 
 using namespace std;
 using namespace sc_core;
+using namespace sc_dt;
+
+#define ND_PIPS_COUNT 11
+#define PIP_SIGNALS_COUNT 10
 
 SC_MODULE(switching_block){
 
     //entity ports
 
-    vector<sc_inout<bool>*> ports;
-    sc_export<interface> out;
+    sc_port<sc_signal_inout_if<sc_logic>> ports[28];
 
     switching_block(sc_module_name name, string filename, int index) : sc_module(name), sw1("sw1",1), sw2("sw2",2){
-
-        for(int i =0; i< 28;i++){
-            ports.push_back(new sc_inout<bool>);
-        }
 
         sw1.load_switching_config(filename,index);
         sw2.load_switching_config(filename,index);
@@ -29,37 +28,106 @@ SC_MODULE(switching_block){
 
         //configure ND PIPs
 
-        for(int i=0 ;i<11; i++){
+        for(int i=0 ;i<ND_PIPS_COUNT; i++){
             nd_pips.push_back(new pip("pip"));
         }
 
-        // TODO: connect control        
-        for(auto nd_pip: nd_pips){
-            vector<sc_signal<bool>*> sigs = create_signal_vector(4);
-            nd_pip->bind_ports(sigs);
-            nd_pip_signals.push_back(sigs);
+        for(int i =0; i<PIP_SIGNALS_COUNT;i++){
+            pip_signals.push_back(new sc_signal_resolved);
         }
 
-        interface a(nd_pip_signals.at(0).at(0));
+        // pips 3 6 and 7 are on same horizontal line
 
-        out.bind(a);
+        // pip 3 and pip 6
+        nd_pips[2]->ports[1](*pip_signals[0]);
+        nd_pips[5]-> ports[3](*pip_signals[0]);
+
+        // pip 6 and pip 7
+        nd_pips[5]->ports[1](*pip_signals[1]);
+        nd_pips[6]->ports[3](*pip_signals[1]);
+
+        //pips 4 5 and 10 are on same horizontal line
+
+        // pip 4 and pip 5
+        nd_pips[3]->ports[1](*pip_signals[2]);
+        nd_pips[4]->ports[3](*pip_signals[2]);
+        
+        //pip 5 and pip 10
+        nd_pips[4]->ports[1](*pip_signals[3]);
+        nd_pips[9]->ports[3](*pip_signals[3]);
+
+        //pips 1 and 1 1are on same horizontal line
+
+        nd_pips[0]->ports[1](*pip_signals[4]);
+        nd_pips[10]->ports[3](*pip_signals[4]);
+
+        //pips 2 3 and 4 are on same vertical line
+        
+        //pips 2 and 3
+        nd_pips[1]->ports[2](*pip_signals[5]);
+        nd_pips[2]->ports[0](*pip_signals[5]);
+
+        nd_pips[2]->ports[2](*pip_signals[6]);
+        nd_pips[3]->ports[0](*pip_signals[6]);
+
+        //pips 6 and 5 are on same horizontal line
+
+        nd_pips[5]->ports[2](*pip_signals[7]);
+        nd_pips[4]->ports[0](*pip_signals[7]);
+
+        // pips 7 and 8 are on same verical line
+
+        nd_pips[6]->ports[2](*pip_signals[8]);
+        nd_pips[7]->ports[0](*pip_signals[8]);
+
+        // pips 9 and 10 are on same vertical line
+
+        nd_pips[8]->ports[2](*pip_signals[9]);
+        nd_pips[9]->ports[0](*pip_signals[9]);
+
+        // pip 2 is connected to port 4
+        nd_pips[1]->ports[0](ports[4]);
+
+        // pip 6 is connected to port 5
+        nd_pips[5]->ports[0](ports[5]);
+
+        //pip 7 is connected to port 6 and 10
+        nd_pips[6]->ports[0](ports[6]);
+        nd_pips[6]->ports[1](ports[10]);
+
+        //pip 9 is connected to port 7 and 9
+        nd_pips[8]->ports[0](ports[7]);
+        nd_pips[8]->ports[1](ports[9]);
+
+        //pip 10 is connected to port 11
+        nd_pips[9]->ports[1](ports[11]);
+
+        //pip 8 is connected to port 12
+        nd_pips[7]->ports[1](ports[12]);
+
+        //pip 11 is connected to port 13
+        nd_pips[10]->ports[1](ports[13]);
+
+        //connecting pips to south ports
+        nd_pips[9]->ports[2](ports[15]);
+        nd_pips[7]->ports[2](ports[16]);
+        nd_pips[4]->ports[2](ports[17]);
+        nd_pips[3]->ports[2](ports[18]);
+        nd_pips[10]->ports[2](ports[19]);
+        nd_pips[0]->ports[2](ports[22]);
+
+        //pip 1 to west output
+        nd_pips[0]->ports[3](ports[23]);
+
 
     }
 
     ~switching_block(){
-        for(auto port : ports){
-            delete port;
+        for(auto pip: nd_pips){
+            delete pip;
         }
-        for(auto sig: matrix1_signals){
+        for(auto sig : pip_signals){
             delete sig;
-        }
-        for(auto nd_pip: nd_pips){
-            delete nd_pip;
-        }
-        for(auto vector_sigs : nd_pip_signals){
-            for(auto sig : vector_sigs){
-                delete sig;
-            }
         }
     }
 
@@ -150,12 +218,12 @@ private:
     }
 
     switch_matrix sw1,sw2;
-    vector<sc_signal<bool>*> matrix1_signals;
-    vector<sc_signal<bool>*> matrix2_signals;
     bool pip_connections[28];
     bool nd_connections[11];
 
+    vector<sc_signal_resolved*> pip_signals;
+
     vector<pip*> nd_pips;
-    vector<vector<sc_signal<bool>*>> nd_pip_signals;   
+
 
 };
