@@ -9,23 +9,20 @@
 
 using namespace std;
 using namespace sc_core;
+using namespace sc_dt;
 
 SC_MODULE(pip){
 
     //entity ports
-    vector<sc_inout<bool>*> ports;
+    sc_port<sc_signal_inout_if<sc_logic>> ports[4];
     sc_in<bool> control;
 
     SC_CTOR(pip){
 
-        for(int i =0; i<4;i++){
-            ports.push_back(new sc_inout<bool>);
-        }
-
         SC_THREAD(proc);
         
         for(int i =0; i<4; i++){
-            sensitive << *ports[i];
+            sensitive << ports[i];
         }
         
         #ifdef DEBUG
@@ -37,13 +34,13 @@ SC_MODULE(pip){
     void proc(){
         while(true){
             wait();
-            bool new_state[4];
+            sc_logic new_state[4] = {sc_logic_0,sc_logic_0,sc_logic_0,sc_logic_0};
 
             for(int i =0; i<4;i++){
                 new_state[i] = ports[i]->read();
             }
 
-            if(control == 1){
+            if(control.read() == 1){
                 
                 // find index of port that changed
 
@@ -72,28 +69,14 @@ SC_MODULE(pip){
 
                 wait(SC_ZERO_TIME);
 
-                copy_array(new_state,last_state,4);
+                copy_logic_array(new_state,last_state,4);
 
             }
         }
     }    
 
-    
-    void bind_ports(vector<sc_signal<bool>*> sigs){
-        for(int i =0; i<4;i++){
-            ports[i]->bind(*sigs[i]);
-        }
-    }
-
-    ~pip(){
-        for(auto port : ports){
-            delete port;
-        }
-    }
-
 private:
-    bool last_state[4];
-
+    sc_logic last_state[4];
 };
 
 #endif
