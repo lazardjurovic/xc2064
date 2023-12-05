@@ -9,8 +9,6 @@
 #include "pip.hpp"
 #include "switching_block.hpp"
 
-#include "tests/pip_test.hpp"
-
 using namespace std;
 using namespace sc_core;
 using namespace sc_dt;
