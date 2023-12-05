@@ -5,7 +5,6 @@
 
 #include "switching_matrix.hpp"
 #include "pip.hpp"
-#include "interface.hpp"
 
 using namespace std;
 using namespace sc_core;
