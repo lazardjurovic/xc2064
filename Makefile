@@ -2,7 +2,6 @@ FLAGS = -lsystemc -lpthread
 
 main: 
 	g++ -g main.cpp -o main $(FLAGS)
-	./main
 
 main.o:
 	$(CC) -c main.cpp
@@ -13,9 +12,9 @@ debug:
 
 clean:
 	rm main
-	rm tracefile.vcd
 	rm main.o
+	rm tracefile.vcd
+
 
 wave:
 	gtkwave tracefile.vcd
-

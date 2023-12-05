@@ -18,7 +18,7 @@ SC_MODULE(switching_block){
 
     //entity ports
 
-    sc_port<sc_signal_inout_if<sc_logic>> ports[25];
+    sc_port<sc_signal_inout_if<sc_logic>> ports[26];
 
     switching_block(sc_module_name name, string filename, int index) : sc_module(name), sw1("sw1",1), sw2("sw2",2){
 
@@ -105,7 +105,6 @@ SC_MODULE(switching_block){
         nd_pips[10]->ports[2](ports[17]);
         nd_pips[10]->ports[3](*pip_signals[17]);        
 
-
         //binding nd_pip control signals
 
         for(int i =0; i<ND_PIPS_COUNT;i++){
@@ -113,6 +112,29 @@ SC_MODULE(switching_block){
             nd_control_signals[i]->write(nd_controls[i]);
             nd_pips[i]->control(*nd_control_signals[i]);
         }
+
+        //binding switching matrixes
+
+        //swithing matrix 1
+        sw1.ports[0](ports[0]);
+        sw1.ports[1](ports[1]);
+        sw1.ports[2](*pip_signals[16]);
+        sw1.ports[3](*pip_signals[6]);
+        sw1.ports[4](ports[19]);
+        sw1.ports[5](*pip_signals[18]);
+        sw1.ports[6](ports[24]);
+        sw1.ports[7](ports[25]);
+
+        //switching matrix 2
+
+        sw2.ports[0](ports[3]);
+        sw2.ports[1](ports[4]);
+        sw2.ports[2](*pip_signals[9]);
+        sw2.ports[3](*pip_signals[14]);
+        sw2.ports[4](*pip_signals[16]);
+        sw2.ports[5](ports[18]);
+        sw2.ports[6](ports[22]);
+        sw2.ports[7](ports[23]);
 
         #ifdef DEBUG
         cout << "Created switching block." << endl;
