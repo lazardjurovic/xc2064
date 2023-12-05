@@ -72,6 +72,7 @@ SC_MODULE(switch_matrix){
             }
 
             wait(SC_ZERO_TIME);
+            copy_logic_array(new_state,states,8);
 
         }
     }

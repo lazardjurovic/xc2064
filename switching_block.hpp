@@ -12,113 +12,111 @@ using namespace sc_core;
 using namespace sc_dt;
 
 #define ND_PIPS_COUNT 11
-#define PIP_SIGNALS_COUNT 10
+#define PIP_SIGNALS_COUNT 19
 
 SC_MODULE(switching_block){
 
     //entity ports
 
-    sc_port<sc_signal_inout_if<sc_logic>> ports[28];
+    sc_port<sc_signal_inout_if<sc_logic>> ports[25];
 
     switching_block(sc_module_name name, string filename, int index) : sc_module(name), sw1("sw1",1), sw2("sw2",2){
 
         sw1.load_switching_config(filename,index);
         sw2.load_switching_config(filename,index);
-        load_pip_nd__controls(filename,index);
+        load_pip_nd_controls(filename,index);
 
         //configure ND PIPs
 
         for(int i=0 ;i<ND_PIPS_COUNT; i++){
             nd_pips.push_back(new pip("pip"));
+            cout << nd_pips[i]->name() << endl;
         }
 
         for(int i =0; i<PIP_SIGNALS_COUNT;i++){
             pip_signals.push_back(new sc_signal_resolved);
         }
 
-        // pips 3 6 and 7 are on same horizontal line
+        // bind nd_pips
 
-        // pip 3 and pip 6
-        nd_pips[2]->ports[1](*pip_signals[0]);
-        nd_pips[5]-> ports[3](*pip_signals[0]);
+        //pip1
+        nd_pips[0]->ports[0](*pip_signals[18]);
+        nd_pips[0]->ports[1](*pip_signals[17]);
+        nd_pips[0]->ports[2](ports[20]);
+        nd_pips[0]->ports[3](ports[21]);
 
-        // pip 6 and pip 7
-        nd_pips[5]->ports[1](*pip_signals[1]);
-        nd_pips[6]->ports[3](*pip_signals[1]);
-
-        //pips 4 5 and 10 are on same horizontal line
-
-        // pip 4 and pip 5
-        nd_pips[3]->ports[1](*pip_signals[2]);
-        nd_pips[4]->ports[3](*pip_signals[2]);
-        
-        //pip 5 and pip 10
-        nd_pips[4]->ports[1](*pip_signals[3]);
-        nd_pips[9]->ports[3](*pip_signals[3]);
-
-        //pips 1 and 1 1are on same horizontal line
-
-        nd_pips[0]->ports[1](*pip_signals[4]);
-        nd_pips[10]->ports[3](*pip_signals[4]);
-
-        //pips 2 3 and 4 are on same vertical line
-        
-        //pips 2 and 3
-        nd_pips[1]->ports[2](*pip_signals[5]);
-        nd_pips[2]->ports[0](*pip_signals[5]);
-
-        nd_pips[2]->ports[2](*pip_signals[6]);
-        nd_pips[3]->ports[0](*pip_signals[6]);
-
-        //pips 6 and 5 are on same horizontal line
-
-        nd_pips[5]->ports[2](*pip_signals[7]);
-        nd_pips[4]->ports[0](*pip_signals[7]);
-
-        // pips 7 and 8 are on same verical line
-
-        nd_pips[6]->ports[2](*pip_signals[8]);
-        nd_pips[7]->ports[0](*pip_signals[8]);
-
-        // pips 9 and 10 are on same vertical line
-
-        nd_pips[8]->ports[2](*pip_signals[9]);
-        nd_pips[9]->ports[0](*pip_signals[9]);
-
-        // pip 2 is connected to port 4
+        //pip2
         nd_pips[1]->ports[0](ports[4]);
+        nd_pips[1]->ports[1](*pip_signals[0]);
+        nd_pips[1]->ports[2](*pip_signals[1]);
+        nd_pips[1]->ports[3](*pip_signals[2]);
 
-        // pip 6 is connected to port 5
-        nd_pips[5]->ports[0](ports[5]);
+        //pip3
+        nd_pips[2]->ports[0](*pip_signals[3]);
+        nd_pips[2]->ports[1](*pip_signals[4]);
+        nd_pips[2]->ports[2](*pip_signals[5]);
+        nd_pips[2]->ports[3](*pip_signals[6]);
 
-        //pip 7 is connected to port 6 and 10
-        nd_pips[6]->ports[0](ports[6]);
-        nd_pips[6]->ports[1](ports[10]);
+        //pip4
+        nd_pips[3]->ports[0](*pip_signals[5]);
+        nd_pips[3]->ports[1](*pip_signals[7]);
+        nd_pips[3]->ports[2](*pip_signals[8]);
+        nd_pips[3]->ports[3](*pip_signals[9]);
 
-        //pip 9 is connected to port 7 and 9
-        nd_pips[8]->ports[0](ports[7]);
-        nd_pips[8]->ports[1](ports[9]);
+        //pip5
+        nd_pips[4]->ports[0](*pip_signals[10]);
+        nd_pips[4]->ports[1](*pip_signals[11]);
+        nd_pips[4]->ports[2](*pip_signals[8]);
+        nd_pips[4]->ports[3](ports[16]);
 
-        //pip 10 is connected to port 11
-        nd_pips[9]->ports[1](ports[11]);
+        //pip6
+        nd_pips[5]->ports[0](*pip_signals[0]);
+        nd_pips[5]->ports[1](*pip_signals[12]);
+        nd_pips[5]->ports[2](*pip_signals[10]);
+        nd_pips[5]->ports[3](*pip_signals[4]);
 
-        //pip 8 is connected to port 12
-        nd_pips[7]->ports[1](ports[12]);
+        //pip7
+        nd_pips[6]->ports[0](ports[5]);
+        nd_pips[6]->ports[1](ports[9]);
+        nd_pips[6]->ports[2](*pip_signals[13]);
+        nd_pips[6]->ports[3](*pip_signals[12]);
 
-        //pip 11 is connected to port 13
-        nd_pips[10]->ports[1](ports[13]);
+        //pip8
+        nd_pips[7]->ports[0](*pip_signals[13]);
+        nd_pips[7]->ports[1](ports[11]);
+        nd_pips[7]->ports[2](ports[15]);
+        nd_pips[7]->ports[3](*pip_signals[14]);
 
-        //connecting pips to south ports
-        nd_pips[9]->ports[2](ports[15]);
-        nd_pips[7]->ports[2](ports[16]);
-        nd_pips[4]->ports[2](ports[17]);
-        nd_pips[3]->ports[2](ports[18]);
-        nd_pips[10]->ports[2](ports[19]);
-        nd_pips[0]->ports[2](ports[22]);
+        //pip9
+        nd_pips[8]->ports[0](ports[6]);
+        nd_pips[8]->ports[1](ports[8]);
+        nd_pips[8]->ports[2](*pip_signals[15]);
+        nd_pips[8]->ports[3](*pip_signals[16]);
 
-        //pip 1 to west output
-        nd_pips[0]->ports[3](ports[23]);
+        //pip10
+        nd_pips[9]->ports[0](*pip_signals[15]);
+        nd_pips[9]->ports[1](ports[9]);
+        nd_pips[9]->ports[2](ports[14]);
+        nd_pips[9]->ports[3](*pip_signals[11]);
 
+        //pip11
+        nd_pips[10]->ports[0](*pip_signals[16]);
+        nd_pips[10]->ports[1](ports[12]);
+        nd_pips[10]->ports[2](ports[17]);
+        nd_pips[10]->ports[3](*pip_signals[17]);        
+
+
+        //binding nd_pip control signals
+
+        for(int i =0; i<ND_PIPS_COUNT;i++){
+            nd_control_signals.push_back(new sc_signal<bool>);
+            nd_control_signals[i]->write(nd_controls[i]);
+            nd_pips[i]->control(*nd_control_signals[i]);
+        }
+
+        #ifdef DEBUG
+        cout << "Created switching block." << endl;
+        #endif
 
     }
 
@@ -133,18 +131,7 @@ SC_MODULE(switching_block){
 
 private:
 
-    vector<sc_signal<bool>*> create_signal_vector(int size) {
-        vector<sc_signal<bool>*> signal_vector;
-
-        for (int i = 0; i < size; ++i) {
-            sc_signal<bool>* signal = new sc_signal<bool>();
-            signal_vector.push_back(signal);
-        }
-
-        return signal_vector;
-    }
-
-    void load_pip_nd__controls(string filename, int index){
+    void load_pip_nd_controls(string filename, int index){
     
     ifstream file(filename);
     string line;
@@ -198,7 +185,7 @@ private:
                         line_bin[37], //  PIP A3,AX
     };
 
-    bool tmp_nd_connections[11] = { line_bin[133], // 1
+    bool tmp_nd_controls[11] = { line_bin[133], // 1
                                     line_bin[125], // 2
                                     line_bin[117], // 3
                                     line_bin[109], // 4
@@ -213,15 +200,16 @@ private:
     };    
 
     copy_array(tmp_pip_connections,pip_connections,28);
-    copy_array(tmp_nd_connections,nd_connections,11);
+    copy_array(tmp_nd_controls,nd_controls,11);
 
     }
 
     switch_matrix sw1,sw2;
     bool pip_connections[28];
-    bool nd_connections[11];
+    bool nd_controls[11];
 
     vector<sc_signal_resolved*> pip_signals;
+    vector<sc_signal<bool>*> nd_control_signals;
 
     vector<pip*> nd_pips;
 
