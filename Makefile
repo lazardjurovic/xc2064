@@ -9,7 +9,6 @@ debug:
 
 clean:
 	rm main
-	rm main.o
 	rm tracefile.vcd
 
 wave: main

@@ -17,11 +17,11 @@ int sc_main(int argc, char *argv[]){
 
     sc_report_handler::set_actions (SC_WARNING, SC_DO_NOTHING);
 
-    switching_block sw("sw1","bitstream/Parse_out.txt",0);
+    switching_block sw("switching_block_1","bitstream/Parse_out.txt",0);
 
     vector<sc_signal_resolved*> sigs;
 
-    for(int i = 0; i<26;i++){
+    for(int i = 0; i<24;i++){
         sigs.push_back(new sc_signal_resolved);
         sw.ports[i](*sigs[i]);
     }

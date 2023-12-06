@@ -12,12 +12,13 @@ using namespace sc_dt;
 
 #define ND_PIPS_COUNT 11
 #define PIP_SIGNALS_COUNT 19
+#define SWITCH_BOX_PORTS 24
 
 SC_MODULE(switching_block){
 
     //entity ports
 
-    sc_port<sc_signal_inout_if<sc_logic>> ports[26];
+    sc_port<sc_signal_inout_if<sc_logic>> ports[SWITCH_BOX_PORTS];
 
     switching_block(sc_module_name name, string filename, int index) : sc_module(name), sw1("sw1",1), sw2("sw2",2){
 
@@ -41,8 +42,8 @@ SC_MODULE(switching_block){
         //pip1
         nd_pips[0]->ports[0](*pip_signals[18]);
         nd_pips[0]->ports[1](*pip_signals[17]);
-        nd_pips[0]->ports[2](ports[20]);
-        nd_pips[0]->ports[3](ports[21]);
+        nd_pips[0]->ports[2](ports[18]);
+        nd_pips[0]->ports[3](ports[19]);
 
         //pip2
         nd_pips[1]->ports[0](ports[4]);
@@ -66,7 +67,7 @@ SC_MODULE(switching_block){
         nd_pips[4]->ports[0](*pip_signals[10]);
         nd_pips[4]->ports[1](*pip_signals[11]);
         nd_pips[4]->ports[2](*pip_signals[8]);
-        nd_pips[4]->ports[3](ports[16]);
+        nd_pips[4]->ports[3](ports[14]);
 
         //pip6
         nd_pips[5]->ports[0](*pip_signals[0]);
@@ -76,33 +77,33 @@ SC_MODULE(switching_block){
 
         //pip7
         nd_pips[6]->ports[0](ports[5]);
-        nd_pips[6]->ports[1](ports[9]);
+        nd_pips[6]->ports[1](ports[8]);
         nd_pips[6]->ports[2](*pip_signals[13]);
         nd_pips[6]->ports[3](*pip_signals[12]);
 
         //pip8
         nd_pips[7]->ports[0](*pip_signals[13]);
-        nd_pips[7]->ports[1](ports[11]);
-        nd_pips[7]->ports[2](ports[15]);
+        nd_pips[7]->ports[1](ports[10]);
+        nd_pips[7]->ports[2](ports[13]);
         nd_pips[7]->ports[3](*pip_signals[14]);
 
         //pip9
         nd_pips[8]->ports[0](ports[6]);
-        nd_pips[8]->ports[1](ports[8]);
+        nd_pips[8]->ports[1](ports[7]);
         nd_pips[8]->ports[2](*pip_signals[15]);
         nd_pips[8]->ports[3](*pip_signals[16]);
 
         //pip10
         nd_pips[9]->ports[0](*pip_signals[15]);
         nd_pips[9]->ports[1](ports[9]);
-        nd_pips[9]->ports[2](ports[14]);
+        nd_pips[9]->ports[2](ports[12]);
         nd_pips[9]->ports[3](*pip_signals[11]);
 
         //pip11
         nd_pips[10]->ports[0](*pip_signals[16]);
-        nd_pips[10]->ports[1](ports[12]);
-        nd_pips[10]->ports[2](ports[17]);
-        nd_pips[10]->ports[3](*pip_signals[17]);        
+        nd_pips[10]->ports[1](ports[11]);
+        nd_pips[10]->ports[2](ports[15]);
+        nd_pips[10]->ports[3](*pip_signals[17]);
 
         //binding nd_pip control signals
 
@@ -119,10 +120,10 @@ SC_MODULE(switching_block){
         sw1.ports[1](ports[1]);
         sw1.ports[2](*pip_signals[16]);
         sw1.ports[3](*pip_signals[6]);
-        sw1.ports[4](ports[19]);
+        sw1.ports[4](ports[17]);
         sw1.ports[5](*pip_signals[18]);
-        sw1.ports[6](ports[24]);
-        sw1.ports[7](ports[25]);
+        sw1.ports[6](ports[22]);
+        sw1.ports[7](ports[23]);
 
         //switching matrix 2
 
@@ -131,9 +132,9 @@ SC_MODULE(switching_block){
         sw2.ports[2](*pip_signals[9]);
         sw2.ports[3](*pip_signals[14]);
         sw2.ports[4](*pip_signals[16]);
-        sw2.ports[5](ports[18]);
-        sw2.ports[6](ports[22]);
-        sw2.ports[7](ports[23]);
+        sw2.ports[5](ports[16]);
+        sw2.ports[6](ports[20]);
+        sw2.ports[7](ports[21]);
 
         #ifdef DEBUG
         cout << "Created switching block." << endl;
@@ -231,6 +232,7 @@ private:
 
     vector<sc_signal_resolved*> pip_signals;
     vector<sc_signal<bool>*> nd_control_signals;
+    sc_signal_resolved test;
 
     vector<pip*> nd_pips;
 
