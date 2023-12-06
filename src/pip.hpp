@@ -40,11 +40,7 @@ SC_MODULE(pip){
                 new_state[i] = ports[i]->read();
             }
 
-            if(control.read() == 1){
-                
-                // find index of port that changed
-
-                int index_changed = 0;
+            int index_changed = 0;
 
                 for(int i =0; i<4;i++){
                     if(last_state[i]  != new_state[i]){
@@ -59,6 +55,8 @@ SC_MODULE(pip){
                 }
 
 
+            if(control.read() == 1){
+
                 // update all ports according to one that changed
 
                 for(int i =0; i<4; i++){
@@ -70,6 +68,18 @@ SC_MODULE(pip){
                 wait(SC_ZERO_TIME);
 
                 copy_logic_array(new_state,last_state,4);
+
+            }else{
+                // if pip not actice pass horizontal and vertical accordingly
+                if(index_changed == 0){
+                    ports[2]->write(ports[0]->read());
+                }else if(index_changed == 1){
+                    ports[3]->write(ports[1]->read());
+                }else if(index_changed == 2){
+                    ports[0]->write(ports[2]->read());
+                }else{
+                    ports[1]->write(ports[3]->read());
+                }
 
             }
         }
