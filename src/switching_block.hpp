@@ -232,7 +232,6 @@ private:
 
     vector<sc_signal_resolved*> pip_signals;
     vector<sc_signal<bool>*> nd_control_signals;
-    sc_signal_resolved test;
 
     vector<pip*> nd_pips;
 
