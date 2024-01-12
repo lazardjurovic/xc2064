@@ -33,7 +33,7 @@ int sc_main(int argc, char *argv[]){
 
     sc_start(10,SC_NS);
     // test stimuli
-    for(int i = 0; i<4;i++){
+    for(int i = 0; i<6;i++){
         sigs[i]->write(sc_logic_1);
     }
     sc_start(10,SC_NS);
