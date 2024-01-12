@@ -8,6 +8,7 @@
 #include "switching_matrix.hpp"
 #include "pip.hpp"
 #include "switching_block.hpp"
+#include "clb_pips.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -18,8 +19,11 @@ int sc_main(int argc, char *argv[]){
     sc_report_handler::set_actions (SC_WARNING, SC_DO_NOTHING);
 
     switching_block sw("switching_block_1","bitstream/Parse_out.txt",0);
+    clb_pips cpips("clb_pips","bitstream/Parse_out.txt",0);
+
 
     vector<sc_signal_resolved*> sigs;
+    vector<sc_signal_resolved*> clb_pip_sigs;
 
     for(int i = 0; i<24;i++){
         sigs.push_back(new sc_signal_resolved);
@@ -30,12 +34,26 @@ int sc_main(int argc, char *argv[]){
         sig->write(sc_logic_0);
     }
 
+    // testing clb pips
+    for(int i = 0; i<22;i++){
+        clb_pip_sigs.push_back(new sc_signal_resolved);
+        cpips.ports[i](*clb_pip_sigs[i]);
+    }
+
+    for(auto sig : clb_pip_sigs){
+        sig->write(sc_logic_0);
+    }
 
     sc_start(10,SC_NS);
     // test stimuli
     for(int i = 0; i<6;i++){
         sigs[i]->write(sc_logic_1);
     }
+
+    for(int i = 0; i<8;i++){
+        clb_pip_sigs[i]->write(sc_logic_1);
+    }
+
     sc_start(10,SC_NS);
 
     cout << endl << "Simulation ended."<<endl;
