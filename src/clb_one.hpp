@@ -2,8 +2,9 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
 #include "utils.hpp"
+#include "OpenQM/implicant.h"
+#include "OpenQM/qm.h"
 
 using namespace sc_core;
 using namespace std;
@@ -215,7 +216,7 @@ SC_MODULE(clb_one){
         y.bind(*signals[6]);
     }
 
-    void laod_config(string name, int index){
+    void load_config(string name, int index){
 
         ifstream file(name);
         string line;
@@ -296,7 +297,24 @@ SC_MODULE(clb_one){
         copy_array(lut_input_muxes_tmp,lut_input_muxes,8);
         copy_array(mux_tmp,clb_muxes,12);
 
-        
+        #ifdef DEBUG
+
+        // Print logic function of CLB minimized by OpenQM
+
+        for(int i = 0; i<15;i++){
+            if(big_lut[i] == 1){
+                implicant_list.push_back(int_2_string_4(i));
+            }
+        }
+
+        solution = makeQM(implicant_list,dont_care_list);
+
+        string soulution_expression = getBooleanExpression(solution);
+
+        cout << "Configured this LUT with function: " << soulution_expression << endl;
+
+        #endif
+
         #ifdef DEBUG
         //print_array(upper_lut,8);
         //print_array(lower_lut,8);
@@ -320,5 +338,7 @@ SC_MODULE(clb_one){
         int upper_lut_address = 0 , lower_lut_address = 0;
         int big_lut_address = 0;
 
+        vector<Implicant> implicant_list,solution;
+        vector<Implicant> dont_care_list = {};
 
 };

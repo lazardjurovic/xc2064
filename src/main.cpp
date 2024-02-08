@@ -21,7 +21,7 @@ int sc_main(int argc, char *argv[]){
     switching_block sw("switching_block_1","bitstream/Parse_out.txt",0);
     clb_pips cpips("clb_pips","bitstream/Parse_out.txt",0);
     clb_one clb("clb1");
-    clb.laod_config("bitstream/Parse_out.txt",3);
+    clb.load_config("bitstream/Parse_out.txt",0);
 
     vector<sc_signal<bool> *> clb_sigs;
 

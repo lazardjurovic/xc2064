@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <bitset>
 
 using namespace std;
 using namespace sc_dt;
@@ -70,6 +71,32 @@ void vector_to_array(std::vector<bool> v, bool array[]){
         array[i] = v[i];
     }
 
+}
+
+string int_2_string_4(int number){
+
+    if (number < 0 || number > 15) {
+        return "Invalid input";
+    }
+
+    // Convert the number to a 4-character long binary string
+    std::bitset<4> binary(number);
+    
+    // Convert the bitset to a string and return
+    return binary.to_string();
+}
+
+string int_2_string_3(int number){
+
+    if (number < 0 || number > 7) {
+        return "Invalid input";
+    }
+
+    // Convert the number to a 4-character long binary string
+    std::bitset<3> binary(number);
+    
+    // Convert the bitset to a string and return
+    return binary.to_string();
 }
 
 
