@@ -2,7 +2,7 @@
 # xc2064 - SystemC modeling and simulation 
 XC2064 was the first FPGA introduced by Xilinx in 1984. Aim of this project is to make SystemC model of this FPGA and provide simulation environment for experimenting with different configurations.
 
-It was inspired by Ken Shirriff's blog [post](https://www.righto.com/2020/09/reverse-engineering-first-fpga-chip.html#fnref:mux) where he explained process of reverse engineering XC2064 and provided all needed information needed for building one by yourself. Besides great work he did on analyzing XC2064 He also built a web application which shows internal configuration of every FPGA internal element. It can be found [here](https://righto.com/xc2064/).Also [datasheet](https://media.digikey.com/pdf/Data%20Sheets/Xilinx%20PDFs/XC2000%20Families.pdf) needed to be consuted for small amount of details He left out.
+It was inspired by Ken Shirriff's blog [post](https://www.righto.com/2020/09/reverse-engineering-first-fpga-chip.html#fnref:mux) where he explained process of reverse engineering XC2064 and provided all needed information needed for building one by yourself. Besides great work he did on analyzing XC2064 He also built a web application which shows internal configuration of every FPGA internal element. It can be found [here](https://righto.com/xc2064/). Also [datasheet](https://media.digikey.com/pdf/Data%20Sheets/Xilinx%20PDFs/XC2000%20Families.pdf) needed to be consuted for small amount of details He left out.
 
 ## XC2064 internals
 ![CLB - Configurable Logic Block](https://static.righto.com/images/xc2064/CLB.jpg)
@@ -17,6 +17,7 @@ Green box represent switching matrix which is implemented in /src/switching_matr
 
 - /bitstream - python script that parses bitstream config file and puts it in neat format for loading into simulation
 - /src - all C++ source files used in project. Every module is in it's own .hpp file 
+- /src/OpenQM - [Implementation of Quine–McCluskey algorithm](https://github.com/Andreabont/OpenQM) written by Andrea Bontempi under GNU GPLv3. Used for verifying functions written to CLBs from bitstream by comparing them to configuration found [here](https://righto.com/xc2064/).
 - Makefile - build script
 
 ## Usage
