@@ -87,7 +87,54 @@ SC_MODULE(clb_one){
                     #endif
 
                 }else{
-                    // if luts are connectred
+                    // if luts are separated
+                    // currently only option 2 from datasheet supported until proved different
+
+                    bool gin_3=0, gin_2=0, gin_1=0, fin_3=0,fin_2 = 0, fin_1 = 0;
+
+                    // selecting inputs for g mux
+
+                    if(lut_input_muxes[7] == 1){
+                        gin_3 = d;
+                    }else if(lut_input_muxes[6] == 1){
+                        gin_3 = c;
+                    }
+
+                    if(lut_input_muxes[5] == 1){
+                        gin_2 = b;
+                    }else{
+                        gin_2 = c;
+                    }
+
+                    if(lut_input_muxes[4] == 1){
+                        gin_1 = a;
+                    }else{
+                        gin_1 = b;
+                    }
+
+                    // selecting inputs for f mux
+
+                    if(lut_input_muxes[3] == 1){
+                        fin_3 = d;
+                    }else if(lut_input_muxes[2] == 1){
+                        fin_3 = c;
+                    }
+
+                    if(lut_input_muxes[1] == 1){
+                        gin_2 = b;
+                    }else{
+                        gin_2 = c;
+                    }
+
+                    if(lut_input_muxes[0] == 1){
+                        gin_1 = a;
+                    }else{
+                        gin_1 = b;
+                    }   
+
+                    upper_lut_address = 4*fin_1 + 2*fin_2 + fin_3;
+                    lower_lut_address = 4*gin_1 + 2*gin_2 + gin_3; 
+
 
                     lut_f = upper_lut[upper_lut_address];
                     lut_g = lower_lut[lower_lut_address];
@@ -168,7 +215,7 @@ SC_MODULE(clb_one){
         y.bind(*signals[6]);
     }
 
-    void load_matrix(string name, int index){
+    void laod_config(string name, int index){
 
         ifstream file(name);
         string line;
@@ -220,8 +267,16 @@ SC_MODULE(clb_one){
         
 
         //control signals for muxes that selct LUT inputs
-        bool comb_sels_vector[8] = {bin_line[81], bin_line[89], bin_line[129], bin_line[137], // selecting inputs for F LUT
-        bin_line[49], bin_line[57], bin_line[9], bin_line[1] }; // selecting inputs for G LUT
+        bool lut_input_muxes_tmp[8] = {
+            bin_line[81], // FIN_1 = A
+            bin_line[89], // FIN_2 = B
+            bin_line[129], // FIN_3 = C
+            bin_line[137], // FIN_3 = D
+            bin_line[49], // GIN_1 = A
+            bin_line[41], // GIN_2 = B
+            bin_line[9], // GIN_3 = C
+            bin_line[1] // GIN_3 = D
+            };
 
         //setting up controls for muxes in CLB module
         bool mux_tmp[12] = {bin_line[138], // RES = G
@@ -238,7 +293,7 @@ SC_MODULE(clb_one){
                     bin_line[91] //CLK = enabled
         };  
 
-        copy_array(comb_sels_vector,lut_input_muxes,8);
+        copy_array(lut_input_muxes_tmp,lut_input_muxes,8);
         copy_array(mux_tmp,clb_muxes,12);
 
         

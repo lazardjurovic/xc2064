@@ -20,6 +20,16 @@ int sc_main(int argc, char *argv[]){
 
     switching_block sw("switching_block_1","bitstream/Parse_out.txt",0);
     clb_pips cpips("clb_pips","bitstream/Parse_out.txt",0);
+    clb_one clb("clb1");
+    clb.laod_config("bitstream/Parse_out.txt",3);
+
+    vector<sc_signal<bool> *> clb_sigs;
+
+    for(int i =0; i < 7;i++){
+        clb_sigs.push_back( new sc_signal<bool>);
+    }
+
+    clb.bind_ports(clb_sigs);
 
 
     vector<sc_signal_resolved*> sigs;
@@ -45,6 +55,7 @@ int sc_main(int argc, char *argv[]){
     }
 
     sc_start(10,SC_NS);
+    
     // test stimuli
     for(int i = 0; i<6;i++){
         sigs[i]->write(sc_logic_1);
