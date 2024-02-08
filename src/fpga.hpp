@@ -22,7 +22,7 @@ SC_MODULE(fpga){
         cout << "Loading bitstream from file " << bitstream_file << endl;
         #endif
 
-        for(int i =0; i<16;i++){
+        for(int i =0; i<32;i++){
             clbs.push_back(new clb_one("clb"));
             clbs[i]->load_config(bitstream_file,i);
         }

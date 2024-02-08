@@ -18,8 +18,16 @@ using namespace sc_dt;
 int sc_main(int argc, char *argv[]){
 
     sc_report_handler::set_actions (SC_WARNING, SC_DO_NOTHING);
+    string *bitstream_file;
 
-    fpga device("xc2064","bitstream/Parse_out.txt");
+    if(argc>=2){
+        char* arg_name = argv[1];
+        bitstream_file = new string(arg_name);
+    }else{
+        bitstream_file = new string("bitstream/Parse_out.txt");
+    }
+
+    fpga device("xc2064",*bitstream_file);
     
     sc_start(10,SC_NS);
 

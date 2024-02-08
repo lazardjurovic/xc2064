@@ -1,178 +1,100 @@
 import re
 
-#Format existing .RBT file
+def convert_int_list(data, start, end, step, length):
+    result = []
+    for i in range(start, end, step):
+        for j in range(0, length):
+            result.append(int(data[i + j]))
+    return result
 
-filename = "TEST1.RBT"
-with open(filename, 'r') as file:
-    lines = file.read()
+def write_to_file(output_file, *bit_lists):
+    try:
+        with open(output_file, 'r'):
+            # File exists, open in append mode
+            mode = 'a'
+    except FileNotFoundError:
+        # File doesn't exist, open in write mode
+        mode = 'w'
 
-pattern = re.compile(r'0([01]{71})111')
-matches = pattern.findall(lines)
+    with open(output_file, mode) as f:
+        for bit_list in bit_lists:
+            for bit in bit_list:
+                f.write(str(bit))
+            f.write("\n")
 
-columns = []
-# Extract 160 columns
-for i in range(160):
-    if i < len(matches):
-        columns.append(matches[i])
-    else:
-        columns.append("0" * 71) 
 
-merged_binary_array = ''.join(columns)
+def main():
+    # Format existing .RBT file
+    filename = "TEST1.RBT"
+    with open(filename, 'r') as file:
+        lines = file.read()
 
-#print("Unwrapped bitstream file.")
-#print(merged_binary_array)
+    pattern = re.compile(r'0([01]{71})111')
+    matches = pattern.findall(lines)
 
-def convert_int(list):
-    ret = []
-    for element in list:
-        ret.append(int(element))
-    return ret
-#JUST DO OPERATIONS ON PRE-GENERATED BITSTREAM
+    columns = []
+    # Extract 160 columns
+    for i in range(160):
+        if i < len(matches):
+            columns.append(matches[i])
+        else:
+            columns.append("0" * 71)
 
-filename = "SITE_DEMO.RBT"
+    merged_binary_array = ''.join(columns)
 
-with open(filename,'r') as f:
-    line = f.read();
+    # JUST DO OPERATIONS ON PRE-GENERATED BITSTREAM
 
-#extract data for each cell
+    filename = "SITE_DEMO.RBT"
 
-hh,gh,gg,hg = [], [], [], []
+    with open(filename, 'r') as f:
+        line = f.read()
 
-for i in range(643,1921,71):
-    for j in range(0,8):
-        hh.append(line[i+j])
-        
-for i in range(651,1929,71):
-    for j in range(0,8):
-        gh.append(line[i+j])
+    # Extract data for each cell
+    hh = convert_int_list(line, 643, 1921, 71, 8)
+    gh = convert_int_list(line, 651, 1929, 71, 8)
+    gg = convert_int_list(line, 1921, 3199, 71, 8)
+    hg = convert_int_list(line, 1929, 3207, 71, 8)
 
-for i in range(1929,3207,71):
-    for j in range(0,8):
-        gg.append(line[i+j])
+    fh = convert_int_list(line, 660, 1938, 71, 8)
+    eh = convert_int_list(line, 668, 1946, 71, 8)
+    dh = convert_int_list(line, 676, 1954, 71, 8)
+    fg = convert_int_list(line, 1938, 3216, 71, 8)
+    eg = convert_int_list(line, 1946, 3224, 71, 8)
+    dg = convert_int_list(line, 1954, 3232, 71, 8)
 
-for i in range(1921,3199,71):
-    for j in range(0,8):
-        hg.append(line[i+j])
+    ch = convert_int_list(line, 685, 1963, 71, 8)
+    bh = convert_int_list(line, 693, 1971, 71, 8)
+    ah = convert_int_list(line, 701, 1979, 71, 8)
+    cg = convert_int_list(line, 1963, 3241, 71, 8)
+    bg = convert_int_list(line, 1971, 3249, 71, 8)
+    ag = convert_int_list(line, 1979, 3257, 71, 8)
 
-hh = convert_int(hh)
-gh = convert_int(gh)
-gg = convert_int(gg)
-hg = convert_int(hg)
+    hf = convert_int_list(line, 3341, 4619, 71, 8)
+    gf = convert_int_list(line, 3349, 4627, 71, 8)
+    ge = convert_int_list(line, 4627, 5905, 71, 8)
+    he = convert_int_list(line, 4619, 5897, 71, 8)
 
-fh,eh,dh,fg,eg,dg = [], [], [], [], [], []
+    ff = convert_int_list(line, 3358, 4636, 71, 8)
+    ef = convert_int_list(line, 3366, 4644, 71, 8)
+    df = convert_int_list(line, 3374, 4652, 71, 8)
+    fe = convert_int_list(line, 4636, 5914, 71, 8)
+    ee = convert_int_list(line, 4644, 5922, 71, 8)
+    de = convert_int_list(line, 4652, 5930, 71, 8)
 
-for i in range(660,1938,71):
-    for j in range(0,8):
-        fh.append(line[i+j])
+    cf = convert_int_list(line, 3383, 4661, 71, 8)
+    bf = convert_int_list(line, 3391, 4669, 71, 8)
+    af = convert_int_list(line, 3399, 4677, 71, 8)
+    ce = convert_int_list(line, 4661, 5939, 71, 8)
+    be = convert_int_list(line, 4669, 5947, 71, 8)
+    ae = convert_int_list(line, 4677, 5955, 71, 8)
 
-for i in range(668,1946,71):
-    for j in range(0,8):
-        eh.append(line[i+j])
+    # Write 176 bit matrices to output file for C++ to setup CLBs
+    write_to_file("Parse_out.txt", hh,gh,fh,eh,dh,ch,bh,ah)
+    write_to_file("Parse_out.txt", hg,gg,fg,eg,dg,cg,bg,ag)
+    write_to_file("Parse_out.txt", hf,gf,ff,ef,df,cf,bf,af)
+    write_to_file("Parse_out.txt", he,ge,fe,ee,de,ce,be,ae)
 
-for i in range(676,1954,71):
-    for j in range(0,8):
-        dh.append(line[i+j])
 
-for i in range(1938,3216,71):
-    for j in range(0,8):
-        fg.append(line[i+j])
-
-for i in range(1946,3224,71):
-    for j in range(0,8):
-        eg.append(line[i+j])
-
-for i in range(1954,3232,71):
-    for j in range(0,8):
-        dg.append(line[i+j])
-
-fh = convert_int(fh)
-eh = convert_int(eh)
-dh = convert_int(dh)
-fg = convert_int(fg)
-eg = convert_int(eg)
-dg = convert_int(dg)
-
-ch,bh,ah,cg,bg,ag = [], [], [], [], [], []
-
-for i in range(685,1963,71):
-    for j in range(0,8):
-        ch.append(line[i+j])
-
-for i in range(693,1971,71):
-    for j in range(0,8):
-        bh.append(line[i+j])
-
-for i in range(701,1979,71):
-    for j in range(0,8):
-        ah.append(line[i+j])
-
-for i in range(1963,3241,71):
-    for j in range(0,8):
-        cg.append(line[i+j])
-
-for i in range(1971,3249,71):
-    for j in range(0,8):
-        bg.append(line[i+j])
-
-for i in range(1979,3257,71):
-    for j in range(0,8):
-        ag.append(line[i+j])
-
-ch = convert_int(ch)
-bh = convert_int(bh)
-ah = convert_int(ah)
-cg = convert_int(cg)
-bg = convert_int(bg)
-ag = convert_int(ag)
-
-#Write 144 bit matrices to output file for C++ to 
-#setup CLBs
-
-with open("Parse_out.txt",'w') as f:
-    for bit in hh:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in gh:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in fh:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in eh:
-        f.write(str(bit))    
-    f.write("\n")
-    for bit in dh:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in ch:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in bh:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in ah:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in hg:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in gg:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in fg:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in eg:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in dg:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in cg:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in bg:
-        f.write(str(bit))
-    f.write("\n")
-    for bit in ag:
-        f.write(str(bit))
+if __name__ == "__main__":
+    # This block will be executed only if the script is run as the main program
+    main()
