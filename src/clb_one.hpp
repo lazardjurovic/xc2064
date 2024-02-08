@@ -1,3 +1,6 @@
+#ifndef CLB_ONE_HPP
+#define CLB_ONE_HPP
+
 #include <systemc>
 #include <iostream>
 #include <string>
@@ -9,7 +12,7 @@
 using namespace sc_core;
 using namespace std;
 
-#define DEBUG
+#define QM
 
 SC_MODULE(clb_one){
 
@@ -235,6 +238,7 @@ SC_MODULE(clb_one){
             file.close();
         }else{
             cout << "Unable to open file " << name << endl; 
+            return;
         }
 
         cout << "Loading CLB with: "<<endl;
@@ -297,7 +301,7 @@ SC_MODULE(clb_one){
         copy_array(lut_input_muxes_tmp,lut_input_muxes,8);
         copy_array(mux_tmp,clb_muxes,12);
 
-        #ifdef DEBUG
+        #ifdef QM
 
         // Print logic function of CLB minimized by OpenQM
 
@@ -342,3 +346,5 @@ SC_MODULE(clb_one){
         vector<Implicant> dont_care_list = {};
 
 };
+
+#endif

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <systemc>
 
-#define DEBUG
+//#define DEBUG
 
 #include "clk_gen.hpp"
 #include "clb_one.hpp"
@@ -9,6 +9,7 @@
 #include "pip.hpp"
 #include "switching_block.hpp"
 #include "clb_pips.hpp"
+#include "fpga.hpp"
 
 using namespace std;
 using namespace sc_core;
@@ -18,6 +19,12 @@ int sc_main(int argc, char *argv[]){
 
     sc_report_handler::set_actions (SC_WARNING, SC_DO_NOTHING);
 
+    fpga device("xc2064","bitstream/Parse_out.txt");
+    
+    sc_start(10,SC_NS);
+
+    cout << endl << "Simulation ended."<<endl;
+/*
     switching_block sw("switching_block_1","bitstream/Parse_out.txt",0);
     clb_pips cpips("clb_pips","bitstream/Parse_out.txt",0);
     clb_one clb("clb1");
@@ -64,11 +71,8 @@ int sc_main(int argc, char *argv[]){
     for(int i = 0; i<8;i++){
         clb_pip_sigs[i]->write(sc_logic_1);
     }
-
-    sc_start(10,SC_NS);
-
-    cout << endl << "Simulation ended."<<endl;
-
+    
+*/
 
 
 /*

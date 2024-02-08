@@ -1,3 +1,6 @@
+#ifndef CLK_GEN_HPP
+#define CLK_GEN_HPP
+
 #include <systemc>
 #include <iostream>
 
@@ -25,3 +28,5 @@ SC_MODULE(clk_gen){
     }
 
 };
+
+#endif
