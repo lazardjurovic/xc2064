@@ -304,18 +304,44 @@ SC_MODULE(clb_one){
         #ifdef QM
 
         // Print logic function of CLB minimized by OpenQM
-
-        for(int i = 0; i<15;i++){
-            if(big_lut[i] == 1){
-                implicant_list.push_back(int_2_string_4(i));
+        if(separate_luts == 0){
+            for(int i = 0; i<15;i++){
+                if(big_lut[i] == 1){
+                    implicant_list.push_back(int_2_string(i,4));
+                }
             }
+
+            solution = makeQM(implicant_list,dont_care_list);
+
+            string soulution_expression = getBooleanExpression(solution);
+
+            cout << "Configured this LUT with function F = G = " << soulution_expression << endl;
+
+        }else{
+
+            for(int i = 0; i<8; i++){
+                if(upper_lut[i] == 1){
+                    implicant_list.push_back(int_2_string(i,3));
+                }
+            }
+
+            solution = makeQM(implicant_list,dont_care_list);
+            string soulution_expression = getBooleanExpression(solution);
+            cout << "Configured upper LUT with function F = " << soulution_expression << endl;
+
+            implicant_list.clear();
+
+            for(int i = 0; i<8; i++){
+                if(lower_lut[i] == 1){
+                    implicant_list.push_back(int_2_string(i,3));
+                }
+            }
+
+            solution = makeQM(implicant_list,dont_care_list);
+            soulution_expression = getBooleanExpression(solution);
+            cout << "Configured lower LUT with function G = " << soulution_expression << endl;
+
         }
-
-        solution = makeQM(implicant_list,dont_care_list);
-
-        string soulution_expression = getBooleanExpression(solution);
-
-        cout << "Configured this LUT with function: " << soulution_expression << endl;
 
         #endif
 

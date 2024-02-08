@@ -73,30 +73,26 @@ void vector_to_array(std::vector<bool> v, bool array[]){
 
 }
 
-string int_2_string_4(int number){
+string int_2_string(int number, int length){
 
     if (number < 0 || number > 15) {
         return "Invalid input";
     }
 
     // Convert the number to a 4-character long binary string
-    std::bitset<4> binary(number);
+    std::bitset<4> binary_4(number);
+    std::bitset<3> binary_3(number);
+
     
     // Convert the bitset to a string and return
-    return binary.to_string();
-}
-
-string int_2_string_3(int number){
-
-    if (number < 0 || number > 7) {
-        return "Invalid input";
+    if(length == 4){
+        return binary_4.to_string();
+    }else if(length == 3){
+        return binary_3.to_string();
+    }else{
+        cout << "Invalid lenth parameter." << endl;
+        return "FAILURE";
     }
-
-    // Convert the number to a 4-character long binary string
-    std::bitset<3> binary(number);
-    
-    // Convert the bitset to a string and return
-    return binary.to_string();
 }
 
 
