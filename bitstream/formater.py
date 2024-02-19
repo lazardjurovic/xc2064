@@ -6,6 +6,7 @@ def convert_int_list(data, start, end, step, length):
         for j in range(0, length):
             result.append(int(data[i + j]))
     return result
+        
 
 def write_to_file(output_file, *bit_lists):
     try:
@@ -22,27 +23,7 @@ def write_to_file(output_file, *bit_lists):
                 f.write(str(bit))
             f.write("\n")
 
-
 def main():
-    # Format existing .RBT file
-    filename = "TEST1.RBT"
-    with open(filename, 'r') as file:
-        lines = file.read()
-
-    pattern = re.compile(r'0([01]{71})111')
-    matches = pattern.findall(lines)
-
-    columns = []
-    # Extract 160 columns
-    for i in range(160):
-        if i < len(matches):
-            columns.append(matches[i])
-        else:
-            columns.append("0" * 71)
-
-    merged_binary_array = ''.join(columns)
-
-    # JUST DO OPERATIONS ON PRE-GENERATED BITSTREAM
 
     filename = "SITE_DEMO.RBT"
 
@@ -131,8 +112,6 @@ def main():
     write_to_file("Parse_out.txt", hc,gc,fc,ec,dc,cc,bc,ac)
     write_to_file("Parse_out.txt", hb,gb,fb,eb,db,cb,bb,ab)
     write_to_file("Parse_out.txt", ha,ga,fa,ea,da,ca,ba,aa)
-
-
 
 if __name__ == "__main__":
     # This block will be executed only if the script is run as the main program

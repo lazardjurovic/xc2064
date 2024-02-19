@@ -254,16 +254,15 @@ SC_MODULE(clb_one){
         }else{
             cout << "Combining into lut4on1."<<endl;
         }
-        #endif
-        
+        #endif        
 
         // signal F in datasheet
-        bool upper_setup_vector[8] = {bin_line[128],bin_line[96],bin_line[120],bin_line[88],bin_line[136],
-        bin_line[104],bin_line[112],bin_line[80]};
+        bool upper_setup_vector[8] = {bin_line[128],bin_line[136],bin_line[120],bin_line[112],bin_line[96],
+        bin_line[104],bin_line[88],bin_line[80]};
 
         //signal G in datasheet
-        bool lower_setup_vector[8] = {bin_line[8],bin_line[40],bin_line[16],bin_line[48],bin_line[0],
-        bin_line[32],bin_line[24],bin_line[56]};
+        bool lower_setup_vector[8] = {bin_line[8],bin_line[0],bin_line[16],bin_line[24],bin_line[40],
+        bin_line[32],bin_line[48],bin_line[56]};
 
         copy_array(upper_setup_vector,upper_lut,8);
         copy_array(lower_setup_vector,lower_lut,8);
@@ -300,6 +299,8 @@ SC_MODULE(clb_one){
 
         copy_array(lut_input_muxes_tmp,lut_input_muxes,8);
         copy_array(mux_tmp,clb_muxes,12);
+
+        print_setup_info();
 
         #ifdef QM
 
@@ -357,7 +358,28 @@ SC_MODULE(clb_one){
     }
 
     private:
-    
+
+        void print_setup_info(){
+
+            cout << "Lut input muxes info: " << endl;
+
+            if(separate_luts ){
+                lut_input_muxes[0] == 1 ?  cout << "FIN_1 = A"<<endl : cout << ""<<endl;
+                lut_input_muxes[1] == 1 ?  cout << "FIN_2 = B"<<endl : cout << ""<<endl;
+                lut_input_muxes[2] == 1 ?  cout << "FIN_3 = C"<<endl : cout << ""<<endl;
+                lut_input_muxes[3] == 1 ?  cout << "FIN_3 = D"<<endl : cout << ""<<endl;
+
+                lut_input_muxes[4] == 1 ?  cout << "GIN_1 = A"<<endl : cout << ""<<endl;
+                lut_input_muxes[5] == 1 ?  cout << "GIN_2 = B"<<endl : cout << ""<<endl;
+                lut_input_muxes[6] == 1 ?  cout << "GIN_3 = C"<<endl : cout << ""<<endl;
+                lut_input_muxes[7] == 1 ?  cout << "GIN_3 = D"<<endl : cout << ""<<endl;
+            }else{
+                lut_input_muxes[3] == lut_input_muxes[7] && lut_input_muxes[3] == 1 ? cout << "FIN_3 = GIN_3 = Q"<<endl : cout << "FIN_3 = GIN_3 = D"<<endl;
+            }
+
+
+        }
+
         sc_signal<bool> ff_s, ff_q, ff_r,ff_d, ff_clk; //flip flor signals
         bool upper_lut[8], lower_lut[8], big_lut[16];
         bool lut_input_muxes[8];

@@ -25,6 +25,9 @@ SC_MODULE(fpga){
         #endif
 
         for(int i =0; i<CLB_NUMBER;i++){
+            cout << endl;
+            cout << "Building CLB number : " << i << endl;
+            cout << "---------------------------------------------------------" << endl;
             clbs.push_back(new clb_one("clb"));
             clbs[i]->load_config(bitstream_file,i);
         }
