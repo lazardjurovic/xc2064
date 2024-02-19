@@ -1,6 +1,6 @@
 FLAGS = -lsystemc -lpthread
 
-main: 
+main:	
 	g++ -g src/main.cpp src/OpenQM/qm.cpp src/OpenQM/implicant.cpp -o main $(FLAGS)
 
 debug:

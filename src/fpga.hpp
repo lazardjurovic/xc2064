@@ -13,6 +13,8 @@
 using namespace std;
 using namespace sc_core;
 
+#define CLB_NUMBER 64
+
 SC_MODULE(fpga){
 
     fpga(sc_module_name name, string bitstream_file) : sc_module(name){
@@ -22,7 +24,7 @@ SC_MODULE(fpga){
         cout << "Loading bitstream from file " << bitstream_file << endl;
         #endif
 
-        for(int i =0; i<32;i++){
+        for(int i =0; i<CLB_NUMBER;i++){
             clbs.push_back(new clb_one("clb"));
             clbs[i]->load_config(bitstream_file,i);
         }
