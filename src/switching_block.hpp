@@ -1,3 +1,6 @@
+#ifndef SWITCHING_BLOCK_HPP
+#define SWITCHING_BLOCK_HPP
+
 #include <systemc>
 #include <iostream>
 #include <string>
@@ -208,3 +211,5 @@ private:
 
 
 };
+
+#endif
