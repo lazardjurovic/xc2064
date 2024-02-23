@@ -60,7 +60,7 @@ SC_MODULE(fpga){
         for(int i = 0; i< SWITCHING_BLOCK_NUMBER; i++){
             switching_blocks.push_back(new switching_block("SW_BLK",bitstream_file,i));
             cout << "here " << i <<endl;
-            switching_blocks[i]->bind_ports(vertical_long_lines[i/7], vertical_long_lines[i/7+1],horizontal_long_lines[i/7],horizontal_long_lines[i/7+1]);
+            switching_blocks[i]->bind_ports(vertical_long_lines[i/7 + i%7], vertical_long_lines[i/7 + i%7 +1],horizontal_long_lines[i/7 + i%7 ],horizontal_long_lines[i/7+i%7+1]);
 
         }
 
