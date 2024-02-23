@@ -145,6 +145,23 @@ SC_MODULE(switching_block){
 
     }
 
+    void bind_ports(vector<sc_signal_resolved*> north, vector<sc_signal_resolved*> south,vector<sc_signal_resolved*> east, vector<sc_signal_resolved*> west){
+
+        for(int i = 0; i< 7; i++){
+            ports[i].bind(*north[i]);
+        }
+        for(int i = 0; i< 7; i++){
+            ports[12+i].bind(*south[i]);
+        }
+        for(int i = 0; i<5; i++){
+            ports[7+i].bind(*east[i]);
+        }
+        for(int i =0; i<5;i++){
+            ports[19+i].bind(*west[i]);
+        }
+
+    }
+
     ~switching_block(){
         for(auto pip: nd_pips){
             delete pip;

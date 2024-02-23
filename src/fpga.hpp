@@ -40,12 +40,33 @@ SC_MODULE(fpga){
             clbs[i]->load_config(bitstream_file,i);
         }
 
+        // generate vertical long lines to connect to switching blocks
+
+        for(int i =0; i<14;i++){
+            for(int j = 0; j<7; j++){
+                vertical_long_lines[i].push_back(new sc_signal_resolved);
+            }
+        }
+        // generate horizontal long lines to connect to switching blocks
+
+        for(int i = 0; i<14;i++){
+            for(int j = 0; j<5;j++){
+                horizontal_long_lines[i].push_back(new sc_signal_resolved);
+            }
+        }
+        
+        // binding switching blocks to long lines
+
         for(int i = 0; i< SWITCHING_BLOCK_NUMBER; i++){
             switching_blocks.push_back(new switching_block("SW_BLK",bitstream_file,i));
-            // bind ports
+            cout << "here " << i <<endl;
+            switching_blocks[i]->bind_ports(vertical_long_lines[i/7], vertical_long_lines[i/7+1],horizontal_long_lines[i/7],horizontal_long_lines[i/7+1]);
+
         }
 
     }
+
+
 
     ~fpga(){
         #ifdef DEBUG
@@ -79,15 +100,8 @@ private:
 
     vector<clb_one*> clbs;
     vector<switching_block*> switching_blocks;
-
-    void connect_internals(clb_one *clb, switch_matrix *sw){ // add PIPs
-
-
-    }
-
-    void read_block(){
-        //connect_internals();
-    }
+    vector<sc_signal_resolved*> vertical_long_lines[14];
+    vector<sc_signal_resolved*> horizontal_long_lines[14];
 
 };
 

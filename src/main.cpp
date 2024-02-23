@@ -34,7 +34,7 @@ int sc_main(int argc, char *argv[]){
 
     sc_trace_file *tf;
     tf = sc_create_vcd_trace_file("tracefile");
-    tf->set_time_unit(100,SC_NS);
+    tf->set_time_unit(10,SC_NS);
 
     vector<sc_signal_resolved*> pin_signals;
 
@@ -45,7 +45,7 @@ int sc_main(int argc, char *argv[]){
     device.bind_ports(pin_signals);
 
     for(int i = 0; i< PIN_COUNT; i++){
-        sc_trace(tf,*pin_signals[i], ("Pin " + to_string(i)));
+        sc_trace(tf,*pin_signals[i], "PIN " + to_string(i));
     }
 
     // generate some random stimuli
